@@ -1,34 +1,23 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
 
-const prisma = new PrismaClient();
+export async function GET(request: Request, { params }: { params: { id: string } }) {
+  const { id } = params;
+  console.log(`Fetching request with ID: ${id} (Prisma not used)`);
+  // Имитация получения данных
+  return NextResponse.json({ id, status: 'pending', data: {} });
+}
 
-export async function PATCH(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
-  try {
-    const id = parseInt(params.id);
-    const data = await request.json();
+export async function PUT(request: Request, { params }: { params: { id: string } }) {
+  const { id } = params;
+  const { status } = await request.json();
+  console.log(`Updating request ${id} to status: ${status} (Prisma not used)`);
+  // Имитация обновления данных
+  return NextResponse.json({ id, status, message: 'Request updated successfully (Prisma not used)' });
+}
 
-    if (!data.status) {
-      return NextResponse.json(
-        { error: 'Статус не указан' },
-        { status: 400 }
-      );
-    }
-
-    const updatedRequest = await prisma.abrasiveRequest.update({
-      where: { id },
-      data: { status: data.status },
-    });
-
-    return NextResponse.json(updatedRequest);
-  } catch (error) {
-    console.error('Error updating request:', error);
-    return NextResponse.json(
-      { error: 'Произошла ошибка при обновлении заявки' },
-      { status: 500 }
-    );
-  }
+export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+  const { id } = params;
+  console.log(`Deleting request with ID: ${id} (Prisma not used)`);
+  // Имитация удаления данных
+  return NextResponse.json({ id, message: 'Request deleted successfully (Prisma not used)' });
 } 

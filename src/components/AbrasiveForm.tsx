@@ -36,7 +36,7 @@ export default function AbrasiveForm() {
     setSubmitStatus('idle');
 
     try {
-      const response = await fetch('/api/requests', {
+      const response = await fetch('/api/submit-form', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

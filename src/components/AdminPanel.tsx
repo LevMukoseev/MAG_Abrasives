@@ -6,9 +6,6 @@ interface AbrasiveRequest {
   id: number;
   materialType: string;
   processType: string;
-  wheelSize: string;
-  gritSize: string;
-  requirements: string;
   createdAt: string;
   status: string;
 }
@@ -40,7 +37,7 @@ export default function AdminPanel() {
   const updateStatus = async (id: number, newStatus: string) => {
     try {
       const response = await fetch(`/api/admin/requests/${id}`, {
-        method: 'PATCH',
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -86,12 +83,6 @@ export default function AdminPanel() {
                 Обработка
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Размер
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Зернистость
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                 Дата
               </th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -113,12 +104,6 @@ export default function AdminPanel() {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                   {request.processType}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {request.wheelSize}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                  {request.gritSize}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                   {new Date(request.createdAt).toLocaleDateString()}
