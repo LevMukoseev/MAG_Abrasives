@@ -1,24 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
-
-interface FormData {
-  materialType: string;
-  material: string;
-  operation: string;
-  machine: string;
-  name: string;
-  email: string;
-  phone: string;
-  company: string;
-  comments: string;
-}
+import React, { useState, FormEvent } from 'react';
 
 export default function AbrasiveForm() {
-  const [formData, setFormData] = useState<FormData>({
-    materialType: '',
+  const [formData, setFormData] = useState({
     material: '',
-    operation: '',
+    operation: 'grinding_rolls',
     machine: '',
     name: '',
     email: '',
@@ -28,12 +15,17 @@ export default function AbrasiveForm() {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [submitMessage, setSubmitMessage] = useState('');
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setSubmitStatus('idle');
+    setSubmitMessage('');
 
     try {
       const response = await fetch('/api/submit-form', {
@@ -44,236 +36,163 @@ export default function AbrasiveForm() {
         body: JSON.stringify(formData),
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to submit form');
+      if (response.ok) {
+        setSubmitMessage('Спасибо за вашу заявку! Мы скоро с вами свяжемся.');
+        setFormData({
+            material: '',
+            operation: 'grinding_rolls',
+            machine: '',
+            name: '',
+            email: '',
+            phone: '',
+            company: '',
+            comments: '',
+        });
+      } else {
+        const errorData = await response.json();
+        setSubmitMessage(`Произошла ошибка: ${errorData.message || 'Попробуйте еще раз.'}`);
       }
-
-      setSubmitStatus('success');
-      setFormData({
-        materialType: '',
-        material: '',
-        operation: '',
-        machine: '',
-        name: '',
-        email: '',
-        phone: '',
-        company: '',
-        comments: '',
-      });
     } catch (error) {
-      setSubmitStatus('error');
+      setSubmitMessage('Произошла ошибка сети. Пожалуйста, проверьте ваше подключение.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
   return (
-    <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-xl p-8">
+    <form onSubmit={handleSubmit} className="space-y-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-2">
-          <label htmlFor="materialType" className="block text-sm font-medium text-gray-700">
-            Тип материала
-          </label>
-          <select
-            id="materialType"
-            name="materialType"
-            value={formData.materialType}
-            onChange={handleChange}
-            required
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-          >
-            <option value="">Выберите тип материала</option>
-            <option value="metal">Металл</option>
-            <option value="wood">Дерево</option>
-            <option value="stone">Камень</option>
-            <option value="other">Другое</option>
-          </select>
-        </div>
-
-        <div className="space-y-2">
-          <label htmlFor="material" className="block text-sm font-medium text-gray-700">
-            Материал
-          </label>
-          <input
-            type="text"
-            id="material"
-            name="material"
-            value={formData.material}
-            onChange={handleChange}
-            required
-            placeholder="Например: нержавеющая сталь"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-          />
-        </div>
-
-        <div className="space-y-2">
-          <label htmlFor="operation" className="block text-sm font-medium text-gray-700">
-            Операция
-          </label>
+        {/* Operation */}
+        <div>
+          <label htmlFor="operation" className="block text-sm font-medium text-gray-700 mb-1">Операция</label>
           <select
             id="operation"
             name="operation"
             value={formData.operation}
             onChange={handleChange}
+            className="form-input"
             required
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
           >
-            <option value="">Выберите операцию</option>
-            <option value="cutting">Резка</option>
-            <option value="grinding">Шлифовка</option>
-            <option value="polishing">Полировка</option>
+            <option value="grinding_rolls">Шлифовка прокатных валков</option>
+            <option value="grinding_springs">Шлифовка торцев пружин</option>
+            <option value="gear_grinding">Зубошлифование</option>
+            <option value="cutting_discs">Отрезные круги большого размера</option>
             <option value="other">Другое</option>
           </select>
         </div>
 
-        <div className="space-y-2">
-          <label htmlFor="machine" className="block text-sm font-medium text-gray-700">
-            Оборудование
-          </label>
+        {/* Material */}
+        <div>
+          <label htmlFor="material" className="block text-sm font-medium text-gray-700 mb-1">Материал</label>
+          <input
+            type="text"
+            id="material"
+            name="material"
+            placeholder="Тип стали"
+            value={formData.material}
+            onChange={handleChange}
+            className="form-input"
+          />
+        </div>
+
+        {/* Machine */}
+        <div>
+          <label htmlFor="machine" className="block text-sm font-medium text-gray-700 mb-1">Оборудование</label>
           <input
             type="text"
             id="machine"
             name="machine"
+            placeholder="Модели станков"
             value={formData.machine}
             onChange={handleChange}
-            required
-            placeholder="Например: углошлифовальная машина"
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+            className="form-input"
           />
         </div>
-
-        <div className="space-y-2">
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-            Ваше имя
-          </label>
+        
+        {/* Name */}
+        <div>
+          <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Ваше имя</label>
           <input
             type="text"
             id="name"
             name="name"
             value={formData.name}
             onChange={handleChange}
+            className="form-input"
             required
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
           />
         </div>
 
-        <div className="space-y-2">
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-            Email
-          </label>
+        {/* Email */}
+        <div>
+          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email</label>
           <input
             type="email"
             id="email"
             name="email"
             value={formData.email}
             onChange={handleChange}
+            className="form-input"
             required
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
           />
         </div>
 
-        <div className="space-y-2">
-          <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
-            Телефон
-          </label>
+        {/* Phone */}
+        <div>
+          <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">Телефон</label>
           <input
             type="tel"
             id="phone"
             name="phone"
             value={formData.phone}
             onChange={handleChange}
+            className="form-input"
             required
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
           />
         </div>
 
-        <div className="space-y-2">
-          <label htmlFor="company" className="block text-sm font-medium text-gray-700">
-            Компания
-          </label>
-          <input
-            type="text"
-            id="company"
-            name="company"
-            value={formData.company}
-            onChange={handleChange}
-            required
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-          />
+        {/* Company */}
+        <div>
+            <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-1">Компания</label>
+            <input
+                type="text"
+                id="company"
+                name="company"
+                value={formData.company}
+                onChange={handleChange}
+                className="form-input"
+            />
         </div>
       </div>
 
-      <div className="mt-6 space-y-2">
-        <label htmlFor="comments" className="block text-sm font-medium text-gray-700">
-          Дополнительная информация
-        </label>
+      {/* Comments */}
+      <div>
+        <label htmlFor="comments" className="block text-sm font-medium text-gray-700 mb-1">Дополнительная информация</label>
         <textarea
           id="comments"
           name="comments"
+          rows={4}
+          placeholder="Опишите детальней ваши требования или опишите задачу"
           value={formData.comments}
           onChange={handleChange}
-          rows={4}
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
-          placeholder="Опишите ваши требования или задайте вопросы"
-        />
+          className="form-textarea"
+        ></textarea>
       </div>
 
-      <div className="mt-8">
+      <div className="text-center">
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
+          className="btn-primary w-full md:w-auto disabled:opacity-50"
         >
           {isSubmitting ? 'Отправка...' : 'Отправить заявку'}
         </button>
       </div>
 
-      {submitStatus === 'success' && (
-        <div className="mt-4 p-4 bg-green-50 text-green-700 rounded-lg flex items-center">
-          <svg
-            className="w-5 h-5 mr-2"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M5 13l4 4L19 7"
-            />
-          </svg>
-          Заявка успешно отправлена! Мы свяжемся с вами в ближайшее время.
-        </div>
-      )}
-
-      {submitStatus === 'error' && (
-        <div className="mt-4 p-4 bg-red-50 text-red-700 rounded-lg flex items-center">
-          <svg
-            className="w-5 h-5 mr-2"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-          Произошла ошибка при отправке заявки. Пожалуйста, попробуйте еще раз.
-        </div>
+      {submitMessage && (
+        <p className={`text-center text-sm mt-4 ${submitMessage.includes('ошибка') ? 'text-red-600' : 'text-green-600'}`}>
+          {submitMessage}
+        </p>
       )}
     </form>
   );
