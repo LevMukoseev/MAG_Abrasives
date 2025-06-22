@@ -1,19 +1,19 @@
-import { NextResponse, NextRequest } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-): Promise<NextResponse> {
+type RouteContext = {
+  params: {
+    id: string;
+  };
+};
+
+export async function GET(request: NextRequest, { params }: RouteContext): Promise<NextResponse> {
   const { id } = params;
   console.log(`Fetching request with ID: ${id} (Prisma not used)`);
   // Имитация получения данных
   return NextResponse.json({ id, status: 'pending', data: {} });
 }
 
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-): Promise<NextResponse> {
+export async function PUT(request: NextRequest, { params }: RouteContext): Promise<NextResponse> {
   const { id } = params;
   const { status } = await request.json();
   console.log(`Updating request ${id} to status: ${status} (Prisma not used)`);
@@ -21,10 +21,7 @@ export async function PUT(
   return NextResponse.json({ id, status, message: 'Request updated successfully (Prisma not used)' });
 }
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-): Promise<NextResponse> {
+export async function DELETE(request: NextRequest, { params }: RouteContext): Promise<NextResponse> {
   const { id } = params;
   console.log(`Deleting request with ID: ${id} (Prisma not used)`);
   // Имитация удаления данных
