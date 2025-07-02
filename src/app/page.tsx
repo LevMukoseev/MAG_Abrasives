@@ -108,7 +108,7 @@ export default function Home() {
     <main className="min-h-screen">
       <StickyHeader isVisible={isHeaderVisible} onScrollToForm={handleScrollToForm} />
       {/* Hero Section */}
-      <section ref={heroRef} className="relative text-white bg-blue-800 md:bg-transparent md:py-20 md:min-h-[480px] md:flex md:items-end overflow-hidden">
+      <section ref={heroRef} className="relative text-white bg-blue-800 md:bg-transparent md:py-4 md:min-h-[84px] md:flex md:items-end overflow-hidden">
         {/* Unified Hero Image for all devices */}
         <div className="absolute inset-0">
           <Image
@@ -122,7 +122,7 @@ export default function Home() {
         </div>
 
         {/* Content */}
-        <div className="container relative z-10 px-4 py-12 mx-auto md:pb-12 md:pt-0">
+        <div className="container relative z-10 px-4 py-4 mx-auto md:pb-3 md:pt-0">
           <div className="flex flex-col items-center text-center md:items-end md:text-left">
             <div className="w-full max-w-lg p-8 rounded-2xl md:bg-black/60 md:shadow-2xl md:max-w-[30vw] lg:max-w-[25vw]">
               <h1 className="text-4xl md:text-5xl font-bold mb-2 animate-fade-in text-white drop-shadow-lg">
@@ -132,7 +132,7 @@ export default function Home() {
                 Лучшие шлифовальные круги
               </p>
               <p className="text-xl mb-8 text-blue-100 animate-fade-in-delay drop-shadow">
-                Абразив Эксперт в партнерстве с производителем кругов из Китая – Jiangsu Grinding Doctor Abrasives Co., Ltd. (GD-Abrasives) предлагает премиальные высокопроизводительные спецификации шлифовальных кругов для различных операций.
+              "Абразив Эксперт" + GD-Abrasives: премиальные шлифовальные круги для любых задач
               </p>
               <div className="flex flex-col sm:flex-row gap-4 animate-fade-in-delay-2 justify-center md:justify-start">
                 <button className="btn-primary" onClick={handleScrollToForm}>
@@ -148,11 +148,10 @@ export default function Home() {
       </section>
 
       {/* Partnership Section */}
-      <section className="py-20 bg-white">
+      <section className="py-8 bg-white">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl font-bold mb-4 text-gray-800">Ведущее партнерство</h2>
-            <div className="mt-8 mb-10 flex justify-center">
+            <div className="mt-0 mb-10 flex justify-center">
               <Image
                 src="/images/logo-united.png"
                 alt="Партнерство Abrasive Expert и GD-Abrasives"
@@ -162,7 +161,7 @@ export default function Home() {
               />
             </div>
             <p className="text-lg text-gray-600 leading-relaxed">
-              Абразив Эксперт в партнерстве с производителем кругов из Китая – Jiangsu Grinding Doctor Abrasives Co., Ltd. (GD-Abrasives) предлагает премиальные высокопроизводительные спецификации шлифовальных кругов для различных операций.
+              "Абразив Эксперт" в партнерстве с производителем кругов из Китая – Jiangsu Grinding Doctor Abrasives Co., Ltd. (GD-Abrasives) предлагает премиальные высокопроизводительные спецификации шлифовальных кругов для различных операций.
             </p>
             <div className="mt-12 bg-blue-50 border-l-4 border-blue-500 text-left p-6 rounded-r-lg">
               <p className="text-lg font-medium text-blue-800">
@@ -242,7 +241,7 @@ export default function Home() {
                   </svg>
                 </div>
                 <h3 className="text-lg font-semibold mb-2">Телефон</h3>
-                <p className="text-gray-600">+7 (912) 285-51-11</p>
+                <a href="tel:+79122855111" className="text-blue-700 underline hover:text-blue-900 transition-colors">+7 (912) 285-51-11</a>
               </div>
 
               <div className="transform hover:scale-105 transition-transform duration-300">
@@ -252,7 +251,7 @@ export default function Home() {
                   </svg>
                 </div>
                 <h3 className="text-lg font-semibold mb-2">Email</h3>
-                <p className="text-gray-600">thebestgrindingwheels@yandex.ru</p>
+                <a href="mailto:thebestgrindingwheels@yandex.ru" className="text-blue-700 underline hover:text-blue-900 transition-colors">thebestgrindingwheels@yandex.ru</a>
               </div>
             </div>
           </div>
