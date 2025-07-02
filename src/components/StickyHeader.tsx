@@ -15,7 +15,7 @@ const StickyHeader: React.FC<StickyHeaderProps> = ({ isVisible, onScrollToForm }
       } bg-white/90 backdrop-blur-sm shadow-lg`}
     >
       <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center h-16 md:h-20">
+        <div className="flex justify-between items-center h-12 md:h-12">
           <h1 className="text-lg md:text-xl font-bold text-gray-800">
             Abrasive Expert
           </h1>

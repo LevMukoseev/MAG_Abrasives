@@ -109,23 +109,10 @@ export default function Home() {
       <StickyHeader isVisible={isHeaderVisible} onScrollToForm={handleScrollToForm} />
       {/* Hero Section */}
       <section ref={heroRef} className="relative text-white bg-blue-800 md:bg-transparent md:py-20 md:min-h-[480px] md:flex md:items-end overflow-hidden">
-        {/* Mobile Image */}
-        <div className="relative md:hidden">
+        {/* Unified Hero Image for all devices */}
+        <div className="absolute inset-0">
           <Image
-            src="/images/team.jpg"
-            alt="Команда Abrasive Expert"
-            width={768}
-            height={512}
-            className="object-cover w-full h-auto"
-            priority
-          />
-          <div className="absolute inset-0 bg-black/60" />
-        </div>
-
-        {/* Desktop Image */}
-        <div className="absolute inset-0 hidden md:block">
-          <Image
-            src="/images/team.jpg"
+            src="/images/abrasives-randompng.png"
             alt="Команда Abrasive Expert"
             fill
             className="object-cover object-right"
