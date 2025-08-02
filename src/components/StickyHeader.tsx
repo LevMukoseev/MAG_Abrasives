@@ -15,11 +15,11 @@ const StickyHeader: React.FC<StickyHeaderProps> = ({ isVisible, onScrollToForm }
       } bg-white/90 backdrop-blur-sm shadow-lg`}
     >
       <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center h-12 md:h-12">
-          <h1 className="text-lg md:text-xl font-bold text-gray-800">
+        <div className="flex justify-between items-center h-10 sm:h-12">
+          <h1 className="text-base sm:text-lg md:text-xl font-bold text-gray-800">
             Abrasive Expert
           </h1>
-          <button className="btn-primary px-4 py-2 text-sm md:px-6 md:py-3 md:text-base" onClick={onScrollToForm}>
+          <button className="btn-primary px-3 py-1.5 text-xs sm:px-4 sm:py-2 sm:text-sm md:px-6 md:py-3 md:text-base" onClick={onScrollToForm}>
             <span>Оставить заявку</span>
           </button>
         </div>

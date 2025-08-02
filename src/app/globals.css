@@ -15,11 +15,11 @@
 
 @layer components {
   .btn-primary {
-    @apply bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 transform hover:scale-105;
+    @apply bg-blue-600 text-white font-semibold py-2 px-4 sm:py-3 sm:px-6 rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 transform hover:scale-105;
   }
 
   .btn-secondary {
-    @apply bg-white text-blue-600 font-semibold py-3 px-6 rounded-lg shadow-md hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-200 transition-all duration-300 transform hover:scale-105;
+    @apply bg-white text-blue-600 font-semibold py-2 px-4 sm:py-3 sm:px-6 rounded-lg shadow-md hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-200 transition-all duration-300 transform hover:scale-105;
   }
 
   .btn-primary::after {

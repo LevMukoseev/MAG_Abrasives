@@ -108,11 +108,11 @@ export default function Home() {
     <main className="min-h-screen">
       <StickyHeader isVisible={isHeaderVisible} onScrollToForm={handleScrollToForm} />
       {/* Hero Section */}
-      <section ref={heroRef} className="relative text-white bg-blue-800 md:bg-transparent md:py-4 md:min-h-[84px] md:flex md:items-end overflow-hidden">
+      <section ref={heroRef} className="relative text-white bg-blue-800 md:bg-transparent md:py-4 md:min-h-[56px] md:flex md:items-end overflow-hidden">
         {/* Unified Hero Image for all devices */}
         <div className="absolute inset-0">
           <Image
-            src="/images/abrasives-randompng.png"
+            src="/images/shapka.jpg"
             alt="Команда Abrasive Expert"
             fill
             className="object-cover object-right"
@@ -123,22 +123,22 @@ export default function Home() {
 
         {/* Content */}
         <div className="container relative z-10 px-4 py-4 mx-auto md:pb-3 md:pt-0">
-          <div className="flex flex-col items-center text-center md:items-end md:text-left">
-            <div className="w-full max-w-lg p-8 rounded-2xl md:bg-black/60 md:shadow-2xl md:max-w-[30vw] lg:max-w-[25vw]">
-              <h1 className="text-4xl md:text-5xl font-bold mb-2 animate-fade-in text-white drop-shadow-lg">
+          <div className="flex flex-col items-center text-center">
+            <div className="w-full max-w-lg p-4 sm:p-6 md:p-8 rounded-2xl md:bg-black/60 md:shadow-2xl md:max-w-none md:w-auto md:min-w-[300px] lg:min-w-[350px]">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-2 animate-fade-in text-white drop-shadow-lg">
                 Abrasive Expert
               </h1>
-              <p className="text-2xl font-semibold mb-6 text-blue-200 animate-fade-in-delay drop-shadow">
+              <p className="text-lg sm:text-xl md:text-2xl font-semibold mb-4 md:mb-6 text-blue-200 animate-fade-in-delay drop-shadow">
                 Лучшие шлифовальные круги
               </p>
-              <p className="text-xl mb-8 text-blue-100 animate-fade-in-delay drop-shadow">
+              <p className="text-base sm:text-lg md:text-xl mb-6 md:mb-8 text-blue-100 animate-fade-in-delay drop-shadow">
               "Абразив Эксперт" + GD-Abrasives: премиальные шлифовальные круги для любых задач
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 animate-fade-in-delay-2 justify-center md:justify-start">
-                <button className="btn-primary" onClick={handleScrollToForm}>
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 animate-fade-in-delay-2 justify-center">
+                <button className="btn-primary text-sm sm:text-base py-2 sm:py-3 px-4 sm:px-6 whitespace-nowrap" onClick={handleScrollToForm}>
                   <span>Оставить заявку</span>
                 </button>
-                <button className="btn-secondary">
+                <button className="btn-secondary text-sm sm:text-base py-2 sm:py-3 px-4 sm:px-6 whitespace-nowrap">
                   <span>Наша специализация</span>
                 </button>
               </div>
