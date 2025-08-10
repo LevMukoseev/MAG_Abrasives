@@ -108,11 +108,11 @@ export default function Home() {
     <main className="min-h-screen">
       <StickyHeader isVisible={isHeaderVisible} onScrollToForm={handleScrollToForm} />
       {/* Hero Section */}
-      <section ref={heroRef} className="relative text-white bg-blue-800 md:bg-transparent md:py-4 md:min-h-[56px] md:flex md:items-end overflow-hidden">
+      <section ref={heroRef} className="relative text-white bg-blue-800 md:bg-transparent md:py-4 md:min-h-[70px] md:flex md:items-end overflow-hidden">
         {/* Unified Hero Image for all devices */}
         <div className="absolute inset-0">
           <Image
-            src="/images/shapka.jpg"
+            src="/images/shapka.png"
             alt="Команда Abrasive Expert"
             fill
             className="object-cover object-right"
