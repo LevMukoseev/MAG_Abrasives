@@ -74,6 +74,7 @@ export default function Home() {
   const [openFeatureId, setOpenFeatureId] = useState<string | null>('tech');
   const formRef = useRef<HTMLElement>(null);
   const heroRef = useRef<HTMLElement>(null);
+  const specializationRef = useRef<HTMLElement>(null);
   const [isHeaderVisible, setIsHeaderVisible] = useState(false);
 
   const handleToggleFeature = (id: string) => {
@@ -82,6 +83,19 @@ export default function Home() {
 
   const handleScrollToForm = () => {
     formRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleScrollToSpecialization = () => {
+    setOpenFeatureId('specialization');
+    setTimeout(() => {
+      if (specializationRef.current) {
+        const elementTop = specializationRef.current.offsetTop;
+        window.scrollTo({
+          top: elementTop,
+          behavior: 'smooth'
+        });
+      }
+    }, 100);
   };
 
   useEffect(() => {
@@ -138,7 +152,7 @@ export default function Home() {
                 <button className="btn-primary text-sm sm:text-base py-2 sm:py-3 px-4 sm:px-6 whitespace-nowrap" onClick={handleScrollToForm}>
                   <span>Оставить заявку</span>
                 </button>
-                <button className="btn-secondary text-sm sm:text-base py-2 sm:py-3 px-4 sm:px-6 whitespace-nowrap">
+                <button className="btn-secondary text-sm sm:text-base py-2 sm:py-3 px-4 sm:px-6 whitespace-nowrap" onClick={handleScrollToSpecialization}>
                   <span>Наша специализация</span>
                 </button>
               </div>
@@ -173,7 +187,7 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-gray-50">
+      <section ref={specializationRef} className="py-20 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="space-y-8">
             {features.map((feature) => (
