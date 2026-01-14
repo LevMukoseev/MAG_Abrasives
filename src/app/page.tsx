@@ -175,7 +175,9 @@ export default function Home() {
               />
             </div>
             <p className="text-lg text-gray-600 leading-relaxed">
-              "Абразив Эксперт" в партнерстве с производителем кругов из Китая – Jiangsu Grinding Doctor Abrasives Co., Ltd. (GD-Abrasives) предлагает премиальные высокопроизводительные спецификации шлифовальных кругов для различных операций.
+              Наша компания является официальным и эксклюзивным представителем производителя кругов Jiangsu Grinding Doctor Abrasives Co., Ltd. (GD-Abrasives) на территории России и стран СНГ.
+              <br />
+              В результате нашего сотрудничества мы готовы предложить вам круги премиальных высокопроизводительных спецификаций для различных операций.
             </p>
             <div className="mt-12 bg-blue-50 border-l-4 border-blue-500 text-left p-6 rounded-r-lg">
               <p className="text-lg font-medium text-blue-800">
@@ -246,8 +248,8 @@ export default function Home() {
         </div>
         <div className="container mx-auto px-4 relative">
           <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl font-bold mb-8">Свяжитесь с нами</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-2xl mx-auto">
+            <h2 className="text-3xl font-bold mb-8">Наши контакты</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
               <div className="transform hover:scale-105 transition-transform duration-300">
                 <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
                   <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -267,7 +269,32 @@ export default function Home() {
                 <h3 className="text-lg font-semibold mb-2">Email</h3>
                 <a href="mailto:thebestgrindingwheels@yandex.ru" className="text-blue-700 underline hover:text-blue-900 transition-colors">thebestgrindingwheels@yandex.ru</a>
               </div>
+
+              <div className="transform hover:scale-105 transition-transform duration-300">
+                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <div className="text-lg font-semibold mb-2">
+                  <p>
+                    ИНН: <span className="font-normal text-gray-600">6670531625</span>
+                  </p>
+                  <p>
+                    КПП: <span className="font-normal text-gray-600">667001001</span>
+                  </p>
+                </div>
+              </div>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-8 bg-white">
+        <div className="container mx-auto px-4">
+          <div className="text-center text-gray-700 space-y-1">
+            <p className="text-sm">ООО "ГД-Абрэзивс РУС"</p>
+            <p className="text-sm">LLC "GD-Abrasives RUS"</p>
           </div>
         </div>
       </section>
