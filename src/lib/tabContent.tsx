@@ -98,4 +98,40 @@ export const tabContent = [
       </div>
     ),
   },
+  {
+    title: 'Бесцентровое шлифование',
+    content: (
+      <div>
+        <h3 className="text-2xl font-bold text-gray-800 mb-4">Бесцентровое шлифование</h3>
+        <p className="text-gray-600">Детальное описание для бесцентрового шлифования скоро появится здесь.</p>
+      </div>
+    ),
+  },
+  {
+    title: 'Круглое шлифование',
+    content: (
+      <div>
+        <h3 className="text-2xl font-bold text-gray-800 mb-4">Круглое шлифование</h3>
+        <p className="text-gray-600">Детальное описание для круглого шлифования скоро появится здесь.</p>
+      </div>
+    ),
+  },
+  {
+    title: 'Плоское шлифование',
+    content: (
+      <div>
+        <h3 className="text-2xl font-bold text-gray-800 mb-4">Плоское шлифование</h3>
+        <p className="text-gray-600">Детальное описание для плоского шлифования скоро появится здесь.</p>
+      </div>
+    ),
+  },
+  {
+    title: 'Зачистные круги',
+    content: (
+      <div>
+        <h3 className="text-2xl font-bold text-gray-800 mb-4">Зачистные круги</h3>
+        <p className="text-gray-600">Детальное описание для зачистных кругов скоро появится здесь.</p>
+      </div>
+    ),
+  },
 ]; 

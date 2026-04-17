@@ -14,6 +14,10 @@ interface FeatureCardProps {
   details?: {
     imageSrc?: string;
     imageAlt?: string;
+    galleryImages?: {
+      src: string;
+      alt: string;
+    }[];
     listItems: string[];
   };
 }
@@ -50,28 +54,45 @@ export default function FeatureCard({ icon, title, initialText, details, isOpen,
           <div className="px-8">
             <div className="border-t border-gray-200 pt-8">
               {details.imageSrc ? (
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-                  <div>
-                    <Image
-                      src={details.imageSrc}
-                      alt={details.imageAlt || 'Детальное изображение'}
-                      width={800}
-                      height={600}
-                      className="w-full h-auto rounded-xl"
-                    />
+                <div>
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                    <div>
+                      <Image
+                        src={details.imageSrc}
+                        alt={details.imageAlt || 'Детальное изображение'}
+                        width={800}
+                        height={600}
+                        className="w-full h-auto rounded-xl"
+                      />
+                    </div>
+                    <div>
+                      <ul className="space-y-4 text-gray-700">
+                        {details.listItems.map((item, index) => (
+                          <li key={index} className="flex">
+                            <svg className="w-5 h-5 mr-3 text-blue-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                            </svg>
+                            <span>{item}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
-                  <div>
-                    <ul className="space-y-4 text-gray-700">
-                      {details.listItems.map((item, index) => (
-                        <li key={index} className="flex">
-                          <svg className="w-5 h-5 mr-3 text-blue-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                          </svg>
-                          <span>{item}</span>
-                        </li>
+                  {details.galleryImages && details.galleryImages.length > 0 && (
+                    <div className="mt-6 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 px-2">
+                      {details.galleryImages.map((image) => (
+                        <div key={image.src} className="rounded-lg overflow-hidden shadow-md">
+                          <Image
+                            src={image.src}
+                            alt={image.alt}
+                            width={320}
+                            height={220}
+                            className="w-full h-28 md:h-32 object-cover"
+                          />
+                        </div>
                       ))}
-                    </ul>
-                  </div>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <ul className="space-y-4 text-gray-700">

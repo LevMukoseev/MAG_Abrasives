@@ -21,6 +21,13 @@ const features = [
     details: {
       imageSrc: '/images/abrasive-detailed.png',
       imageAlt: 'Детальное изображение абразивного круга',
+      galleryImages: [
+        { src: '/images/zernotgx.jpg', alt: 'Керамическое зерно TGX' },
+        { src: '/images/zernonqn.jpg', alt: 'Керамическое зерно NQN' },
+        { src: '/images/zernotgx1.jpg', alt: 'Керамическое зерно TGX крупным планом' },
+        { src: '/images/zernopa.jpg', alt: 'Керамическое зерно PA' },
+        { src: '/images/zernotgx3.jpg', alt: 'Керамическое зерно TGX образец 3' },
+      ],
       listItems: [
         'Новейшие мировые разработки по зерну, связке, технологии изготовления – всё это мы применяем в кругах.',
         'Наша цель – дать лучшее решение по операции из того, что может быть на данный момент в мире.',
@@ -127,7 +134,7 @@ export default function Home() {
         <div className="absolute inset-0">
           <Image
             src="/images/shapka.png"
-            alt="Команда Abrasive Expert"
+            alt="Команда GD-Abrasives"
             fill
             className="object-cover object-center"
             priority
@@ -140,13 +147,13 @@ export default function Home() {
           <div className="flex flex-col items-center text-center">
             <div className="w-full max-w-lg p-4 sm:p-6 md:p-8 rounded-2xl md:bg-black/60 md:shadow-2xl md:max-w-none md:w-auto md:min-w-[300px] lg:min-w-[350px]">
               <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-2 animate-fade-in text-white drop-shadow-lg">
-                Abrasive Expert
+                GD-Abrasives
               </h1>
               <p className="text-lg sm:text-xl md:text-2xl font-semibold mb-4 md:mb-6 text-blue-200 animate-fade-in-delay drop-shadow">
                 Лучшие шлифовальные круги
               </p>
               <p className="text-base sm:text-lg md:text-xl mb-6 md:mb-8 text-blue-100 animate-fade-in-delay drop-shadow">
-              "Абразив Эксперт" + GD-Abrasives: премиальные шлифовальные круги для любых задач
+              GD-Abrasives - премиальные шлифовальные круги для любых задач
               </p>
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 animate-fade-in-delay-2 justify-center">
                 <button className="btn-primary text-sm sm:text-base py-2 sm:py-3 px-4 sm:px-6 whitespace-nowrap" onClick={handleScrollToForm}>
@@ -167,10 +174,10 @@ export default function Home() {
           <div className="max-w-3xl mx-auto text-center">
             <div className="mt-0 mb-10 flex justify-center">
               <Image
-                src="/images/logo-united.png"
-                alt="Партнерство Abrasive Expert и GD-Abrasives"
-                width={250}
-                height={100}
+                src="/images/logo.jpg"
+                alt="GD-Abrasives"
+                width={170}
+                height={70}
                 className="object-contain"
               />
             </div>
@@ -211,7 +218,7 @@ export default function Home() {
       {/* Tabs Section */}
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
+          <div className="max-w-6xl mx-auto">
             <Tabs tabs={tabContent} />
           </div>
         </div>

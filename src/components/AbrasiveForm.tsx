@@ -77,6 +77,10 @@ export default function AbrasiveForm() {
             <option value="grinding_springs">Шлифовка торцев пружин</option>
             <option value="gear_grinding">Зубошлифование</option>
             <option value="cutting_discs">Отрезные круги большого размера</option>
+            <option value="centerless_grinding">Бесцентровое шлифование</option>
+            <option value="cylindrical_grinding">Круглое шлифование</option>
+            <option value="surface_grinding">Плоское шлифование</option>
+            <option value="roughing_wheels">Зачистные круги</option>
             <option value="other">Другое</option>
           </select>
         </div>
