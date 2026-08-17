@@ -1,36 +1,43 @@
-# Современный веб-сайт
+# GD-Abrasives
 
-Это современный веб-сайт, созданный с использованием Next.js, React и Tailwind CSS.
+Сайт-визитка и лендинг с формой заявок для GD-Abrasives (ООО «ГД-Абрэзивс РУС») — официального
+представителя Jiangsu Grinding Doctor Abrasives Co., Ltd. в России и СНГ.
+
+## Стек
+
+- Next.js 15 (App Router)
+- React 18 + TypeScript
+- Tailwind CSS
+- Nodemailer (отправка заявок на email, без базы данных)
 
 ## Установка
 
-1. Установите зависимости:
 ```bash
 npm install
-```
-
-2. Запустите сервер разработки:
-```bash
+cp .env.example .env.local   # заполните SMTP_* и MAIL_TO
 npm run dev
 ```
 
-3. Откройте [http://localhost:3000](http://localhost:3000) в вашем браузере.
+Откройте [http://localhost:3000](http://localhost:3000).
 
-## Сборка для продакшена
+## Переменные окружения
 
-Для создания продакшен-версии выполните:
+См. `.env.example`:
+
+- `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS`, `MAIL_TO` — для отправки заявок с формы.
+- `NEXT_PUBLIC_SITE_URL` — публичный домен сайта, используется в metadata/OG/sitemap/robots.
+
+## Сборка
+
 ```bash
 npm run build
-```
-
-Для запуска продакшен-версии:
-```bash
 npm start
 ```
 
-## Технологии
+## Структура
 
-- Next.js 14
-- React 18
-- Tailwind CSS
-- TypeScript 
+- `src/app/page.tsx` — единственная страница (лендинг), собранная из секций.
+- `src/app/api/submit-form/route.ts` — обработчик формы заявки (валидация, honeypot, rate limit, отправка письма).
+- `src/components/` — UI-компоненты.
+- `src/lib/tabContent.tsx` — контент вкладок «Применение».
+- `src/lib/formOptions.ts` — общий список операций для формы и письма.

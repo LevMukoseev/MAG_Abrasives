@@ -1,31 +1,44 @@
 'use client';
 
-import React from 'react';
+import { useEffect, useState } from 'react';
 
-interface StickyHeaderProps {
-  isVisible: boolean;
-  onScrollToForm: () => void;
-}
+/**
+ * Компактная закреплённая панель, которая появляется, как только hero-секция
+ * уходит за пределы экрана. Самодостаточна: сама следит за #hero через
+ * IntersectionObserver, не требует пропсов/рефов от родителя.
+ */
+export default function StickyHeader() {
+  const [isVisible, setIsVisible] = useState(false);
 
-const StickyHeader: React.FC<StickyHeaderProps> = ({ isVisible, onScrollToForm }) => {
+  useEffect(() => {
+    const heroElement = document.getElementById('hero');
+    if (!heroElement) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsVisible(!entry.isIntersecting),
+      { rootMargin: '-100px 0px 0px 0px' }
+    );
+
+    observer.observe(heroElement);
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <header
+    <div
       className={`fixed top-0 left-0 right-0 z-50 transition-opacity duration-300 ${
         isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'
-      } bg-white/90 backdrop-blur-sm shadow-lg`}
+      } bg-ink/95 backdrop-blur-sm shadow-lg`}
     >
       <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center h-12 sm:h-14">
-          <h1 className="text-base sm:text-lg md:text-xl font-bold text-gray-800">
+        <div className="flex justify-between items-center h-14">
+          <span className="text-sm sm:text-base md:text-lg font-extrabold text-white">
             GD-Abrasives
-          </h1>
-          <button className="btn-primary px-3 py-1.5 text-xs sm:px-4 sm:py-2 sm:text-sm md:px-6 md:py-3 md:text-base" onClick={onScrollToForm}>
-            <span>Оставить заявку</span>
-          </button>
+          </span>
+          <a href="#form" className="btn-primary py-2 px-4 text-xs sm:text-sm">
+            Оставить заявку
+          </a>
         </div>
       </div>
-    </header>
+    </div>
   );
-};
-
-export default StickyHeader; 
+}

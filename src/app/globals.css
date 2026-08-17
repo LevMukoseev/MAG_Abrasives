@@ -3,49 +3,35 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 88px;
   }
 
   body {
-    @apply text-gray-900 antialiased;
+    @apply bg-paper text-ink antialiased;
+  }
+
+  h1, h2, h3, h4 {
+    @apply font-sans font-extrabold tracking-tight;
   }
 }
 
 @layer components {
   .btn-primary {
-    @apply bg-blue-600 text-white font-semibold py-2 px-4 sm:py-3 sm:px-6 rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 transform hover:scale-105;
+    @apply inline-flex items-center justify-center bg-accent text-white font-bold py-3 px-6 rounded-xl2 shadow-sm hover:bg-accent-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-accent transition-all duration-200;
   }
 
   .btn-secondary {
-    @apply bg-white text-blue-600 font-semibold py-2 px-4 sm:py-3 sm:px-6 rounded-lg shadow-md hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-200 transition-all duration-300 transform hover:scale-105;
+    @apply inline-flex items-center justify-center bg-white/10 text-white font-bold py-3 px-6 rounded-xl2 border border-white/25 hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-white/40 transition-all duration-200;
   }
 
-  .btn-primary::after {
-    content: '';
-    @apply absolute inset-0 bg-blue-700 transform scale-x-0 origin-left transition-transform duration-300;
+  .btn-secondary-light {
+    @apply inline-flex items-center justify-center bg-paper-soft text-ink font-bold py-3 px-6 rounded-xl2 border border-black/10 hover:bg-black/5 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ink/20 transition-all duration-200;
   }
 
-  .btn-primary:hover::after {
-    @apply scale-x-100;
-  }
-
-  .btn-primary span {
-    @apply relative z-10;
-  }
-
-  .btn-secondary::after {
-    content: '';
-    @apply absolute inset-0 bg-gray-200 transform scale-x-0 origin-left transition-transform duration-300;
-  }
-
-  .btn-secondary:hover::after {
-    @apply scale-x-100;
-  }
-
-  .btn-secondary span {
-    @apply relative z-10;
+  .section-eyebrow {
+    @apply inline-block text-sm font-bold uppercase tracking-widest text-accent mb-3;
   }
 }
 
@@ -79,14 +65,19 @@
     }
   }
 
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
   /* Custom form styles */
   .form-input,
   .form-textarea,
   .form-select {
-    @apply w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors;
+    @apply w-full px-4 py-2.5 border border-black/[0.15] rounded-xl2 bg-white focus:ring-2 focus:ring-accent focus:border-accent transition-colors;
   }
 
   .form-textarea {
-    @apply min-h-[100px];
+    @apply min-h-[120px];
   }
-} 
+}

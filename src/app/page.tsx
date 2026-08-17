@@ -1,18 +1,15 @@
-'use client';
-
-import React, { useState, useRef, useEffect } from 'react';
-import AbrasiveForm from '@/components/AbrasiveForm';
 import Image from 'next/image';
-import FeatureCard from '@/components/FeatureCard';
+import AbrasiveForm from '@/components/AbrasiveForm';
+import FeaturesAccordion from '@/components/FeaturesAccordion';
+import type { Feature } from '@/components/FeaturesAccordion';
 import Tabs from '@/components/Tabs';
 import { tabContent } from '@/lib/tabContent';
-import StickyHeader from '@/components/StickyHeader';
 
-const features = [
+const features: Feature[] = [
   {
     id: 'tech',
     icon: (
-      <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg className="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
       </svg>
     ),
@@ -21,6 +18,8 @@ const features = [
     details: {
       imageSrc: '/images/abrasive-detailed.png',
       imageAlt: 'Детальное изображение абразивного круга',
+      imageWidth: 1772,
+      imageHeight: 607,
       galleryImages: [
         { src: '/images/zernotgx.jpg', alt: 'Керамическое зерно TGX' },
         { src: '/images/zernonqn.jpg', alt: 'Керамическое зерно NQN' },
@@ -38,7 +37,7 @@ const features = [
   {
     id: 'quality',
     icon: (
-      <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <svg className="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
       </svg>
     ),
@@ -47,6 +46,8 @@ const features = [
     details: {
       imageSrc: '/images/quality-garant.png',
       imageAlt: 'Гарантия качества продукции',
+      imageWidth: 926,
+      imageHeight: 434,
       listItems: [
         'Сокращение времени цикла и себестоимости продукции',
         'Подбор спецификаций кругов под задачу',
@@ -58,15 +59,16 @@ const features = [
     },
   },
   {
-    id: 'specialization',
+    id: 'specialization-item',
     icon: (
-      <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
+      <svg className="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="1.5">
         <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9 9 0 110-18 9 9 0 010 18z" />
         <path strokeLinecap="round" strokeLinejoin="round" d="M12 15a3 3 0 110-6 3 3 0 010 6z" />
       </svg>
     ),
     title: 'Наша специализация',
-    initialText: 'Работаем с кругами большого диаметра с высоким содержанием керамического зерна последних поколений для самых сложных и требовательных задач.',
+    initialText:
+      'Работаем с кругами большого диаметра с высоким содержанием керамического зерна последних поколений для самых сложных и требовательных задач.',
     details: {
       listItems: [
         'Большого диаметра (до 1200 шлифовальные и до 2000 мм отрезные)',
@@ -78,101 +80,51 @@ const features = [
 ];
 
 export default function Home() {
-  const [openFeatureId, setOpenFeatureId] = useState<string | null>('tech');
-  const formRef = useRef<HTMLElement>(null);
-  const heroRef = useRef<HTMLElement>(null);
-  const specializationRef = useRef<HTMLElement>(null);
-  const [isHeaderVisible, setIsHeaderVisible] = useState(false);
-
-  const handleToggleFeature = (id: string) => {
-    setOpenFeatureId(prevId => (prevId === id ? null : id));
-  };
-
-  const handleScrollToForm = () => {
-    formRef.current?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  const handleScrollToSpecialization = () => {
-    setOpenFeatureId('specialization');
-    setTimeout(() => {
-      if (specializationRef.current) {
-        const elementTop = specializationRef.current.offsetTop;
-        window.scrollTo({
-          top: elementTop,
-          behavior: 'smooth'
-        });
-      }
-    }, 100);
-  };
-
-  useEffect(() => {
-    const heroElement = heroRef.current;
-    if (!heroElement) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsHeaderVisible(!entry.isIntersecting);
-      },
-      { rootMargin: '-100px 0px 0px 0px' }
-    );
-
-    observer.observe(heroElement);
-
-    return () => {
-      if (heroElement) {
-        observer.unobserve(heroElement);
-      }
-    };
-  }, []);
-
   return (
     <main className="min-h-screen">
-      <StickyHeader isVisible={isHeaderVisible} onScrollToForm={handleScrollToForm} />
-      {/* Hero Section */}
-      <section ref={heroRef} className="relative text-white md:py-4 md:min-h-[70px] md:flex md:items-end overflow-hidden">
-        {/* Unified Hero Image for all devices */}
+      {/* Hero */}
+      <section id="hero" className="relative bg-ink text-white overflow-hidden">
         <div className="absolute inset-0">
           <Image
             src="/images/shapka.png"
             alt="Команда GD-Abrasives"
             fill
-            className="object-cover object-center"
+            className="object-cover object-center opacity-40"
             priority
           />
-          <div className="absolute inset-0 bg-black/60" />
+          <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/80 to-ink/40" />
         </div>
 
-        {/* Content */}
-        <div className="container relative z-10 px-4 py-4 mx-auto md:pb-3 md:pt-0">
-          <div className="flex flex-col items-center text-center">
-            <div className="w-full max-w-lg p-4 sm:p-6 md:p-8 rounded-2xl md:bg-black/60 md:shadow-2xl md:max-w-none md:w-auto md:min-w-[300px] lg:min-w-[350px]">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-2 animate-fade-in text-white drop-shadow-lg">
-                GD-Abrasives
-              </h1>
-              <p className="text-lg sm:text-xl md:text-2xl font-semibold mb-4 md:mb-6 text-blue-200 animate-fade-in-delay drop-shadow">
-                Лучшие шлифовальные круги
-              </p>
-              <p className="text-base sm:text-lg md:text-xl mb-6 md:mb-8 text-blue-100 animate-fade-in-delay drop-shadow">
-              GD-Abrasives - премиальные шлифовальные круги для любых задач
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 animate-fade-in-delay-2 justify-center">
-                <button className="btn-primary text-sm sm:text-base py-2 sm:py-3 px-4 sm:px-6 whitespace-nowrap" onClick={handleScrollToForm}>
-                  <span>Оставить заявку</span>
-                </button>
-                <button className="btn-secondary text-sm sm:text-base py-2 sm:py-3 px-4 sm:px-6 whitespace-nowrap" onClick={handleScrollToSpecialization}>
-                  <span>Наша специализация</span>
-                </button>
-              </div>
+        <div className="container relative z-10 mx-auto px-4 py-20 sm:py-28">
+          <div className="max-w-2xl">
+            <span className="section-eyebrow">Официальный представитель в РФ и СНГ</span>
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold mb-5 text-balance">
+              GD-Abrasives
+            </h1>
+            <p className="text-xl sm:text-2xl font-bold mb-4 text-white/90">
+              Лучшие шлифовальные круги
+            </p>
+            <p className="text-base sm:text-lg mb-8 text-white/70 max-w-xl">
+              Премиальные шлифовальные круги для любых задач: от прокатных валков до отрезки
+              большого диаметра. Подбор спецификации и поставка 1–3 месяца.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <a href="#form" className="btn-primary">
+                Оставить заявку
+              </a>
+              <a href="#specialization" className="btn-secondary">
+                Наша специализация
+              </a>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Partnership Section */}
-      <section className="py-8 bg-white">
+      {/* About / Partnership */}
+      <section id="about" className="py-20 bg-white">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center">
-            <div className="mt-0 mb-10 flex justify-center">
+            <div className="mb-10 flex justify-center">
               <Image
                 src="/images/logo.jpg"
                 alt="GD-Abrasives"
@@ -181,114 +133,118 @@ export default function Home() {
                 className="object-contain"
               />
             </div>
-            <p className="text-lg text-gray-600 leading-relaxed">
-              Наша компания является официальным и эксклюзивным представителем производителя кругов Jiangsu Grinding Doctor Abrasives Co., Ltd. (GD-Abrasives) на территории России и стран СНГ.
+            <p className="text-lg text-ink/70 leading-relaxed">
+              Наша компания является официальным и эксклюзивным представителем производителя кругов
+              Jiangsu Grinding Doctor Abrasives Co., Ltd. (GD-Abrasives) на территории России и стран СНГ.
               <br />
-              В результате нашего сотрудничества мы готовы предложить вам круги премиальных высокопроизводительных спецификаций для различных операций.
+              В результате нашего сотрудничества мы готовы предложить вам круги премиальных
+              высокопроизводительных спецификаций для различных операций.
             </p>
-            <div className="mt-12 bg-blue-50 border-l-4 border-blue-500 text-left p-6 rounded-r-lg">
-              <p className="text-lg font-medium text-blue-800">
-                Имея 20-летний опыт работы с абразивным инструментом в ведущих мировых компаниях, мы объединились и теперь производим и поставляем самые эффективные решения для Российской промышленности.
+            <div className="mt-12 bg-accent/5 border-l-4 border-accent text-left p-6 rounded-r-xl2">
+              <p className="text-lg font-medium text-ink">
+                Имея 20-летний опыт работы с абразивным инструментом в ведущих мировых компаниях, мы
+                объединились и теперь производим и поставляем самые эффективные решения для Российской
+                промышленности.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section ref={specializationRef} className="py-20 bg-gray-50">
+      {/* Specialization / Features */}
+      <section id="specialization" className="py-20 bg-paper-soft">
         <div className="container mx-auto px-4">
-          <div className="space-y-8">
-            {features.map((feature) => (
-              <FeatureCard
-                key={feature.id}
-                id={feature.id}
-                icon={feature.icon}
-                title={feature.title}
-                initialText={feature.initialText}
-                details={feature.details}
-                isOpen={openFeatureId === feature.id}
-                onToggle={() => handleToggleFeature(feature.id)}
-              />
-            ))}
+          <div className="max-w-2xl mx-auto text-center mb-12">
+            <span className="section-eyebrow">Специализация</span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-ink">Чем мы отличаемся</h2>
+          </div>
+          <div className="max-w-4xl mx-auto">
+            <FeaturesAccordion features={features} />
           </div>
         </div>
       </section>
 
-      {/* Tabs Section */}
-      <section className="py-20 bg-white">
+      {/* Applications / Tabs */}
+      <section id="applications" className="py-20 bg-white">
         <div className="container mx-auto px-4">
+          <div className="max-w-2xl mx-auto text-center mb-12">
+            <span className="section-eyebrow">Применение</span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-ink">
+              Круги для ваших операций
+            </h2>
+          </div>
           <div className="max-w-6xl mx-auto">
             <Tabs tabs={tabContent} />
           </div>
         </div>
       </section>
 
-      {/* Request Form Section */}
-      <section ref={formRef} className="py-20 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-white opacity-50"></div>
+      {/* Request Form */}
+      <section id="form" className="py-20 bg-ink relative overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(226,73,46,0.12),transparent_50%)]" />
         <div className="container mx-auto px-4 relative">
           <div className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold mb-4">Оставить заявку</h2>
-              <p className="text-gray-600">
-                Заполните форму, и наши специалисты помогут подобрать оптимальные абразивные материалы для ваших задач.
+              <span className="section-eyebrow">Заявка</span>
+              <h2 className="text-3xl sm:text-4xl font-extrabold mb-4 text-white">Оставить заявку</h2>
+              <p className="text-white/70">
+                Заполните форму, и наши специалисты помогут подобрать оптимальные абразивные
+                материалы для ваших задач.
               </p>
             </div>
-            <div className="bg-white rounded-2xl shadow-xl p-8">
+            <div className="bg-white rounded-xl2 shadow-xl p-6 sm:p-8">
               <AbrasiveForm />
             </div>
           </div>
         </div>
       </section>
 
-      {/* Contact Section */}
-      <section className="py-20 bg-gray-50 relative overflow-hidden">
-        <div className="absolute inset-0">
-          <Image
-            src="/images/contact-pattern.svg"
-            alt="Декоративный фон"
-            fill
-            className="object-cover opacity-5"
-            aria-hidden="true"
-          />
-        </div>
-        <div className="container mx-auto px-4 relative">
+      {/* Contacts */}
+      <section id="contacts" className="py-20 bg-white">
+        <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl font-bold mb-8">Наши контакты</h2>
+            <span className="section-eyebrow">Контакты</span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-ink mb-12">Наши контакты</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
               <div className="transform hover:scale-105 transition-transform duration-300">
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-12 h-12 bg-accent/10 rounded-xl2 flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
                   </svg>
                 </div>
-                <h3 className="text-lg font-semibold mb-2">Телефон</h3>
-                <a href="tel:+79122855111" className="text-blue-700 underline hover:text-blue-900 transition-colors">+7 (912) 285-51-11</a>
+                <h3 className="text-lg font-bold text-ink mb-2">Телефон</h3>
+                <a href="tel:+79122855111" className="text-accent-dark underline hover:text-accent transition-colors">
+                  +7 (912) 285-51-11
+                </a>
               </div>
 
               <div className="transform hover:scale-105 transition-transform duration-300">
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-12 h-12 bg-accent/10 rounded-xl2 flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
                 </div>
-                <h3 className="text-lg font-semibold mb-2">Email</h3>
-                <a href="mailto:thebestgrindingwheels@yandex.ru" className="text-blue-700 underline hover:text-blue-900 transition-colors">thebestgrindingwheels@yandex.ru</a>
+                <h3 className="text-lg font-bold text-ink mb-2">Email</h3>
+                <a
+                  href="mailto:thebestgrindingwheels@yandex.ru"
+                  className="text-accent-dark underline hover:text-accent transition-colors"
+                >
+                  thebestgrindingwheels@yandex.ru
+                </a>
               </div>
 
               <div className="transform hover:scale-105 transition-transform duration-300">
-                <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-12 h-12 bg-accent/10 rounded-xl2 flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-6 h-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
                 </div>
-                <div className="text-lg font-semibold mb-2">
+                <div className="text-lg font-bold text-ink mb-2">
                   <p>
-                    ИНН: <span className="font-normal text-gray-600">6670531625</span>
+                    ИНН: <span className="font-normal text-ink/70">6670531625</span>
                   </p>
                   <p>
-                    КПП: <span className="font-normal text-gray-600">667001001</span>
+                    КПП: <span className="font-normal text-ink/70">667001001</span>
                   </p>
                 </div>
               </div>
@@ -297,14 +253,15 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="py-8 bg-white">
+      {/* Footer */}
+      <footer className="py-8 bg-ink">
         <div className="container mx-auto px-4">
-          <div className="text-center text-gray-700 space-y-1">
-            <p className="text-sm">ООО "ГД-Абрэзивс РУС"</p>
-            <p className="text-sm">LLC "GD-Abrasives RUS"</p>
+          <div className="text-center text-white/60 space-y-1">
+            <p className="text-sm">ООО «ГД-Абрэзивс РУС»</p>
+            <p className="text-sm">LLC &quot;GD-Abrasives RUS&quot;</p>
           </div>
         </div>
-      </section>
+      </footer>
     </main>
   );
-} 
+}
