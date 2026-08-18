@@ -39,7 +39,7 @@ export default function SiteHeader() {
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-300 ${
-        isSolid ? 'bg-ink/95 backdrop-blur-sm shadow-lg' : 'bg-transparent'
+        isSolid ? 'bg-ink shadow-lg' : 'bg-transparent'
       }`}
     >
       <div className="container mx-auto px-4">
@@ -90,7 +90,7 @@ export default function SiteHeader() {
         </div>
 
         {isOpen && (
-          <nav className="md:hidden pb-4 flex flex-col gap-1 bg-ink/95 backdrop-blur-sm rounded-b-xl2">
+          <nav className="md:hidden pb-4 flex flex-col gap-1 bg-ink rounded-b-xl2">
             {NAV_LINKS.map((link) => (
               <a
                 key={link.href}
