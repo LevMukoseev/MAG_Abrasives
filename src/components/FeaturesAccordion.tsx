@@ -2,6 +2,7 @@
 
 import { useState, ReactNode } from 'react';
 import FeatureCard from './FeatureCard';
+import Reveal from './Reveal';
 
 export interface Feature {
   id: string;
@@ -23,19 +24,20 @@ export default function FeaturesAccordion({ features }: { features: Feature[] })
 
   return (
     <div className="space-y-6">
-      {features.map((feature) => (
-        <FeatureCard
-          key={feature.id}
-          id={feature.id}
-          icon={feature.icon}
-          title={feature.title}
-          initialText={feature.initialText}
-          details={feature.details}
-          isOpen={openFeatureId === feature.id}
-          onToggle={() =>
-            setOpenFeatureId((prev) => (prev === feature.id ? null : feature.id))
-          }
-        />
+      {features.map((feature, index) => (
+        <Reveal key={feature.id} delay={index * 100}>
+          <FeatureCard
+            id={feature.id}
+            icon={feature.icon}
+            title={feature.title}
+            initialText={feature.initialText}
+            details={feature.details}
+            isOpen={openFeatureId === feature.id}
+            onToggle={() =>
+              setOpenFeatureId((prev) => (prev === feature.id ? null : feature.id))
+            }
+          />
+        </Reveal>
       ))}
     </div>
   );

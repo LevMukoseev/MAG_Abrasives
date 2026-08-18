@@ -3,6 +3,8 @@ import AbrasiveForm from '@/components/AbrasiveForm';
 import FeaturesAccordion from '@/components/FeaturesAccordion';
 import type { Feature } from '@/components/FeaturesAccordion';
 import Tabs from '@/components/Tabs';
+import Reveal from '@/components/Reveal';
+import StatCounter from '@/components/StatCounter';
 import { tabContent } from '@/lib/tabContent';
 
 const features: Feature[] = [
@@ -70,6 +72,10 @@ const features: Feature[] = [
     initialText:
       'Работаем с кругами большого диаметра с высоким содержанием керамического зерна последних поколений для самых сложных и требовательных задач.',
     details: {
+      imageSrc: '/images/zernotgx3.jpg',
+      imageAlt: 'Керамическое зерно последних поколений крупным планом',
+      imageWidth: 700,
+      imageHeight: 700,
       listItems: [
         'Большого диаметра (до 1200 шлифовальные и до 2000 мм отрезные)',
         'С премиальным составом и высоким содержанием (до 100%) керамического зерна последних поколений, высокопористые',
@@ -90,10 +96,10 @@ export default function Home() {
             alt="Продукция GD-Abrasives — шлифовальные и отрезные круги"
             fill
             sizes="100vw"
-            className="object-cover object-center opacity-40"
+            className="object-cover object-center opacity-60"
             priority
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-ink via-ink/80 to-ink/40" />
+          <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/85 to-ink/50" />
         </div>
 
         <div className="container relative z-10 mx-auto px-4 py-20 sm:py-28">
@@ -125,22 +131,26 @@ export default function Home() {
       <section className="bg-paper-soft border-b border-black/5">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-black/10">
-            <div className="py-6 px-4 text-center">
-              <p className="text-2xl sm:text-3xl font-extrabold text-accent">20 лет</p>
+            <Reveal className="py-6 px-4 text-center">
+              <p className="text-2xl sm:text-3xl font-extrabold text-accent">
+                <StatCounter value={20} suffix=" лет" />
+              </p>
               <p className="text-xs sm:text-sm text-ink/60 mt-1">опыта в абразивном инструменте</p>
-            </div>
-            <div className="py-6 px-4 text-center">
+            </Reveal>
+            <Reveal className="py-6 px-4 text-center" delay={80}>
               <p className="text-2xl sm:text-3xl font-extrabold text-accent">РФ и СНГ</p>
               <p className="text-xs sm:text-sm text-ink/60 mt-1">официальный представитель GD-Abrasives</p>
-            </div>
-            <div className="py-6 px-4 text-center">
-              <p className="text-2xl sm:text-3xl font-extrabold text-accent">До 2000 мм</p>
+            </Reveal>
+            <Reveal className="py-6 px-4 text-center" delay={160}>
+              <p className="text-2xl sm:text-3xl font-extrabold text-accent">
+                До <StatCounter value={2000} suffix=" мм" />
+              </p>
               <p className="text-xs sm:text-sm text-ink/60 mt-1">диаметр отрезных и шлифовальных кругов</p>
-            </div>
-            <div className="py-6 px-4 text-center">
+            </Reveal>
+            <Reveal className="py-6 px-4 text-center" delay={240}>
               <p className="text-2xl sm:text-3xl font-extrabold text-accent">1-2 дня</p>
               <p className="text-xs sm:text-sm text-ink/60 mt-1">на подготовку коммерческого предложения</p>
-            </div>
+            </Reveal>
           </div>
         </div>
       </section>
@@ -148,7 +158,7 @@ export default function Home() {
       {/* About / Partnership */}
       <section id="about" className="py-20 bg-white">
         <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center">
+          <Reveal className="max-w-3xl mx-auto text-center">
             <div className="mb-10 flex justify-center">
               <Image
                 src="/images/logo.jpg"
@@ -172,17 +182,17 @@ export default function Home() {
                 промышленности.
               </p>
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
 
       {/* Specialization / Features */}
       <section id="specialization" className="py-20 bg-paper-soft">
         <div className="container mx-auto px-4">
-          <div className="max-w-2xl mx-auto text-center mb-12">
+          <Reveal className="max-w-2xl mx-auto text-center mb-12">
             <span className="section-eyebrow">Специализация</span>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-ink">Чем мы отличаемся</h2>
-          </div>
+          </Reveal>
           <div className="max-w-4xl mx-auto">
             <FeaturesAccordion features={features} />
           </div>
@@ -192,15 +202,15 @@ export default function Home() {
       {/* Applications / Tabs */}
       <section id="applications" className="py-20 bg-white">
         <div className="container mx-auto px-4">
-          <div className="max-w-2xl mx-auto text-center mb-12">
+          <Reveal className="max-w-2xl mx-auto text-center mb-12">
             <span className="section-eyebrow">Применение</span>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-ink">
               Круги для ваших операций
             </h2>
-          </div>
-          <div className="max-w-6xl mx-auto">
+          </Reveal>
+          <Reveal className="max-w-6xl mx-auto" delay={100}>
             <Tabs tabs={tabContent} />
-          </div>
+          </Reveal>
         </div>
       </section>
 
@@ -208,7 +218,7 @@ export default function Home() {
       <section id="form" className="py-20 bg-ink relative overflow-hidden">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(226,73,46,0.12),transparent_50%)]" />
         <div className="container mx-auto px-4 relative">
-          <div className="max-w-4xl mx-auto">
+          <Reveal className="max-w-4xl mx-auto">
             <div className="text-center mb-12">
               <span className="section-eyebrow">Заявка</span>
               <h2 className="text-3xl sm:text-4xl font-extrabold mb-4 text-white">Оставить заявку</h2>
@@ -220,14 +230,14 @@ export default function Home() {
             <div className="bg-white rounded-xl2 shadow-xl p-6 sm:p-8">
               <AbrasiveForm />
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
 
       {/* Contacts */}
       <section id="contacts" className="py-20 bg-white">
         <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto text-center">
+          <Reveal className="max-w-4xl mx-auto text-center">
             <span className="section-eyebrow">Контакты</span>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-ink mb-12">Наши контакты</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
@@ -274,7 +284,7 @@ export default function Home() {
                 </div>
               </div>
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
 

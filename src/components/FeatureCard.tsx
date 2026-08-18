@@ -35,18 +35,31 @@ export default function FeatureCard({ icon, title, initialText, details, isOpen,
       onClick={isExpandable ? onToggle : undefined}
     >
       <div className={`p-6 sm:p-8 ${isExpandable ? 'cursor-pointer' : ''}`}>
-        <div className="flex items-center justify-between">
-          <div className="flex items-center">
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center min-w-0">
             <div className="w-12 h-12 bg-accent/10 rounded-xl2 flex items-center justify-center mr-5 shrink-0">
               {icon}
             </div>
             <h3 className="text-xl font-extrabold text-ink">{title}</h3>
           </div>
-          {isExpandable && (
-            <div className="w-8 h-8 flex items-center justify-center text-ink-muted shrink-0">
-              {isOpen ? <MinusIcon className="w-6 h-6" /> : <PlusIcon className="w-6 h-6" />}
-            </div>
-          )}
+          <div className="flex items-center gap-3 shrink-0">
+            {details?.imageSrc && (
+              <Image
+                src={details.imageSrc}
+                alt=""
+                aria-hidden="true"
+                width={72}
+                height={72}
+                sizes="72px"
+                className="hidden sm:block w-14 h-14 rounded-xl2 object-cover"
+              />
+            )}
+            {isExpandable && (
+              <div className="w-8 h-8 flex items-center justify-center text-ink-muted shrink-0">
+                {isOpen ? <MinusIcon className="w-6 h-6" /> : <PlusIcon className="w-6 h-6" />}
+              </div>
+            )}
+          </div>
         </div>
         <p className="text-ink/70 mt-4 sm:ml-16">{initialText}</p>
       </div>
