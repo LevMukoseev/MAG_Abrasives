@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export default function PrivacyPage() {
   return (
     <main className="min-h-screen bg-white">
-      <div className="container mx-auto px-4 py-16 max-w-3xl">
+      <div className="container mx-auto px-4 pt-28 pb-16 max-w-3xl">
         <h1 className="text-3xl sm:text-4xl font-extrabold text-ink mb-2">
           Политика конфиденциальности
         </h1>

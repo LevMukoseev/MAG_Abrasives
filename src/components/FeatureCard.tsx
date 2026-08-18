@@ -68,6 +68,7 @@ export default function FeatureCard({ icon, title, initialText, details, isOpen,
                         alt={details.imageAlt || 'Детальное изображение'}
                         width={details.imageWidth ?? 800}
                         height={details.imageHeight ?? 600}
+                        sizes="(min-width: 1024px) 50vw, 100vw"
                         className="w-full h-auto rounded-xl2"
                       />
                     </div>
@@ -93,6 +94,7 @@ export default function FeatureCard({ icon, title, initialText, details, isOpen,
                             alt={image.alt}
                             width={320}
                             height={220}
+                            sizes="(min-width: 1024px) 20vw, (min-width: 768px) 33vw, 50vw"
                             className="w-full h-28 md:h-32 object-cover"
                           />
                         </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 
 const NAV_LINKS = [
@@ -9,11 +9,39 @@ const NAV_LINKS = [
   { href: '#contacts', label: 'Контакты' },
 ];
 
+/**
+ * Единственный хедер сайта: fixed поверх контента, прозрачный на тёмном hero
+ * главной страницы и сплошной (с блюром) на остальном скролле или на
+ * страницах без hero (например /privacy) — там начинаем со сплошного фона
+ * сразу, чтобы не потерять читаемость на светлом фоне.
+ */
 export default function SiteHeader() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isSolid, setIsSolid] = useState(true);
+
+  useEffect(() => {
+    const heroElement = document.getElementById('hero');
+    if (!heroElement) {
+      // На страницах без hero (например /privacy) хедер всегда сплошной.
+      setIsSolid(true);
+      return;
+    }
+
+    setIsSolid(false);
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsSolid(!entry.isIntersecting),
+      { rootMargin: '-100px 0px 0px 0px' }
+    );
+    observer.observe(heroElement);
+    return () => observer.disconnect();
+  }, []);
 
   return (
-    <header className="relative z-50 bg-ink">
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-300 ${
+        isSolid ? 'bg-ink/95 backdrop-blur-sm shadow-lg' : 'bg-transparent'
+      }`}
+    >
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <a href="#hero" className="flex items-center gap-2 shrink-0">
@@ -62,7 +90,7 @@ export default function SiteHeader() {
         </div>
 
         {isOpen && (
-          <nav className="md:hidden pb-4 flex flex-col gap-1">
+          <nav className="md:hidden pb-4 flex flex-col gap-1 bg-ink/95 backdrop-blur-sm rounded-b-xl2">
             {NAV_LINKS.map((link) => (
               <a
                 key={link.href}

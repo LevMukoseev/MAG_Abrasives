@@ -14,6 +14,7 @@ export const tabContent = [
             alt="Шлифовка прокатных валков"
             width={651}
             height={241}
+            sizes="(min-width: 672px) 672px, 100vw"
             className="w-full max-w-2xl mx-auto rounded-lg shadow-md h-auto"
           />
         </div>
@@ -26,6 +27,7 @@ export const tabContent = [
             alt="Материалы для валков ГП"
             width={257}
             height={101}
+            sizes="192px"
             className="w-48 h-32 object-cover rounded-lg shadow-md shrink-0"
           />
         </div>
@@ -35,6 +37,7 @@ export const tabContent = [
             alt="Керамическое зерно NQN и Vortex"
             width={609}
             height={106}
+            sizes="192px"
             className="float-right ml-4 mb-4 w-48 h-32 object-cover rounded-lg shadow-md"
           />
           <p className="text-ink/70">В качестве материалов для валков используются чугун с длительным сроком службы (ICDP), сталь с высоким содержанием хрома (High-Cr) и быстрорежущая сталь (HSS). Требования к поверхности валков ГП ниже, чем к валкам холодной прокатки. Для более высокой скорости съёма и стойкости круга мы также добавляем зерно <span className="text-accent font-bold">NQN</span> последнего поколения от 20 до 40% или Vortex (<span className="text-ink font-extrabold">АА</span>).</p>
@@ -48,6 +51,7 @@ export const tabContent = [
             alt="Рабочие валки холодной прокатки"
             width={257}
             height={147}
+            sizes="192px"
             className="w-48 h-32 object-cover rounded-lg shadow-md shrink-0"
           />
         </div>
@@ -57,6 +61,7 @@ export const tabContent = [
             alt="Шлифовальные круги для холодной прокатки"
             width={545}
             height={114}
+            sizes="192px"
             className="float-right ml-4 mb-4 w-48 h-32 object-cover rounded-lg shadow-md"
           />
           <p className="text-ink/70">При холодной прокатке, ввиду более высокой твердости валков, используются шлифовальные круги достаточно мягкие (градации твердости C…G) с высокой концентрацией керамического корунда <span className="text-accent font-bold">NQN</span> (20-70%), либо <span className="text-ink font-extrabold">Vortex</span>, чтобы минимизировать время перешлифовки. Если Вам важен минимальный по времени оборот валков на вальцешлифовальном участке – выбирайте спецификации BEST. Размер зерна выбирайте по таблице или из опыта. С помощью режимов обработки можно получать Ra в достаточно широком диапазоне. Но в шлифовании есть правило – выбирать максимально крупное зерно, которое может обеспечивать требуемую чистоту поверхности. Так Вы быстрее снимите нужный припуск и меньше времени потратите на правку круга, а резание будет более свободное, меньше прижогов, выше стойкость круга и ниже себестоимость операции.</p>
@@ -86,6 +91,7 @@ export const tabContent = [
             alt="Праймер по шлифовке прокатных валков"
             width={1002}
             height={1045}
+            sizes="(min-width: 672px) 672px, 100vw"
             className="w-full max-w-2xl mx-auto rounded-lg shadow-md h-auto"
           />
         </div>

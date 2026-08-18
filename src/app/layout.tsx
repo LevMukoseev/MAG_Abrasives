@@ -2,7 +2,6 @@ import type { Metadata } from 'next';
 import { Nunito } from 'next/font/google';
 import './globals.css';
 import SiteHeader from '@/components/SiteHeader';
-import StickyHeader from '@/components/StickyHeader';
 import OrganizationJsonLd from '@/components/OrganizationJsonLd';
 
 const nunito = Nunito({
@@ -43,7 +42,7 @@ export const metadata: Metadata = {
       'Официальный представитель GD-Abrasives в России. Круги для валков, отрезные круги, подбор спецификации под задачу.',
     images: [
       {
-        url: '/images/shapka.png',
+        url: '/images/og-cover.jpg',
         width: 1200,
         height: 630,
         alt: 'GD-Abrasives — шлифовальные круги',
@@ -55,7 +54,7 @@ export const metadata: Metadata = {
     title: 'GD-Abrasives — премиальные шлифовальные круги',
     description:
       'Круги для прокатных валков, отрезные круги, зубошлифование. Официальный представитель в РФ и СНГ.',
-    images: ['/images/shapka.png'],
+    images: ['/images/og-cover.jpg'],
   },
   robots: {
     index: true,
@@ -73,7 +72,6 @@ export default function RootLayout({
       <body className="font-sans bg-paper text-ink antialiased">
         <OrganizationJsonLd />
         <SiteHeader />
-        <StickyHeader />
         {children}
       </body>
     </html>

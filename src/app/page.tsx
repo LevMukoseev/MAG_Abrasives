@@ -86,9 +86,10 @@ export default function Home() {
       <section id="hero" className="relative bg-ink text-white overflow-hidden">
         <div className="absolute inset-0">
           <Image
-            src="/images/shapka.png"
-            alt="Команда GD-Abrasives"
+            src="/images/shapka.webp"
+            alt="Продукция GD-Abrasives — шлифовальные и отрезные круги"
             fill
+            sizes="100vw"
             className="object-cover object-center opacity-40"
             priority
           />
