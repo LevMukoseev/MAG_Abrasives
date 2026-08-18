@@ -120,6 +120,30 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Trust bar */}
+      <section className="bg-paper-soft border-b border-black/5">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 divide-black/10">
+            <div className="py-6 px-4 text-center">
+              <p className="text-2xl sm:text-3xl font-extrabold text-accent">20 лет</p>
+              <p className="text-xs sm:text-sm text-ink/60 mt-1">опыта в абразивном инструменте</p>
+            </div>
+            <div className="py-6 px-4 text-center">
+              <p className="text-2xl sm:text-3xl font-extrabold text-accent">РФ и СНГ</p>
+              <p className="text-xs sm:text-sm text-ink/60 mt-1">официальный представитель GD-Abrasives</p>
+            </div>
+            <div className="py-6 px-4 text-center">
+              <p className="text-2xl sm:text-3xl font-extrabold text-accent">До 2000 мм</p>
+              <p className="text-xs sm:text-sm text-ink/60 mt-1">диаметр отрезных и шлифовальных кругов</p>
+            </div>
+            <div className="py-6 px-4 text-center">
+              <p className="text-2xl sm:text-3xl font-extrabold text-accent">1-2 дня</p>
+              <p className="text-xs sm:text-sm text-ink/60 mt-1">на подготовку коммерческого предложения</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* About / Partnership */}
       <section id="about" className="py-20 bg-white">
         <div className="container mx-auto px-4">
@@ -259,6 +283,11 @@ export default function Home() {
           <div className="text-center text-white/60 space-y-1">
             <p className="text-sm">ООО «ГД-Абрэзивс РУС»</p>
             <p className="text-sm">LLC &quot;GD-Abrasives RUS&quot;</p>
+            <p className="text-sm pt-2">
+              <a href="/privacy" className="underline hover:text-white transition-colors">
+                Политика конфиденциальности
+              </a>
+            </p>
           </div>
         </div>
       </footer>

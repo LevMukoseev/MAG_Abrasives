@@ -12,6 +12,7 @@ const initialFormData = {
   phone: '',
   company: '',
   comments: '',
+  consent: false,
   website: '', // honeypot: скрытое поле, реальные пользователи его не видят и не заполняют
 };
 
@@ -26,8 +27,9 @@ export default function AbrasiveForm() {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const { name, value, type } = e.target;
+    const nextValue = type === 'checkbox' ? (e.target as HTMLInputElement).checked : value;
+    setFormData((prev) => ({ ...prev, [name]: nextValue }));
   };
 
   const handleSubmit = async (e: FormEvent) => {
@@ -216,10 +218,29 @@ export default function AbrasiveForm() {
         />
       </div>
 
+      <div className="flex items-start gap-2.5">
+        <input
+          type="checkbox"
+          id="consent"
+          name="consent"
+          checked={formData.consent}
+          onChange={handleChange}
+          required
+          className="mt-1 h-4 w-4 shrink-0 rounded border-black/30 text-accent focus:ring-accent"
+        />
+        <label htmlFor="consent" className="text-sm text-gray-600">
+          Даю согласие на{' '}
+          <a href="/privacy" target="_blank" rel="noopener noreferrer" className="text-accent-dark underline hover:text-accent">
+            обработку персональных данных
+          </a>{' '}
+          в соответствии с политикой конфиденциальности
+        </label>
+      </div>
+
       <div className="text-center">
         <button
           type="submit"
-          disabled={isSubmitting}
+          disabled={isSubmitting || !formData.consent}
           className="btn-primary w-full md:w-auto disabled:opacity-50 disabled:pointer-events-none"
         >
           <span>{isSubmitting ? 'Отправка...' : 'Отправить заявку'}</span>

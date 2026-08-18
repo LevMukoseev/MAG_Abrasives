@@ -66,6 +66,7 @@ export async function POST(request: NextRequest) {
       phone: sanitize((body as Record<string, unknown>).phone),
       company: sanitize((body as Record<string, unknown>).company),
       comments: sanitize((body as Record<string, unknown>).comments),
+      consent: (body as Record<string, unknown>).consent === true,
     };
 
     if (!formData.name || !formData.email || !formData.phone) {
@@ -74,6 +75,13 @@ export async function POST(request: NextRequest) {
 
     if (!EMAIL_RE.test(formData.email)) {
       return NextResponse.json({ message: 'Некорректный email' }, { status: 400 });
+    }
+
+    if (!formData.consent) {
+      return NextResponse.json(
+        { message: 'Необходимо согласие на обработку персональных данных' },
+        { status: 400 }
+      );
     }
 
     if (!process.env.SMTP_HOST || !process.env.SMTP_USER || !process.env.SMTP_PASS || !process.env.MAIL_TO) {
@@ -106,6 +114,7 @@ export async function POST(request: NextRequest) {
 Телефон: ${formData.phone}
 Компания: ${formData.company || '-'}
 Комментарии: ${formData.comments || '-'}
+Согласие на обработку ПДн: получено
 Дата создания: ${new Date().toISOString()}
 IP: ${ip}
 `;
