@@ -18,10 +18,10 @@ const features: Feature[] = [
     title: 'Передовые технологии',
     initialText: 'Максимальная производительность при минимальных затратах.',
     details: {
-      imageSrc: '/images/abrasive-detailed.png',
-      imageAlt: 'Детальное изображение абразивного круга',
-      imageWidth: 1772,
-      imageHeight: 607,
+      imageSrc: '/images/nqn-grain-diagram.jpg',
+      imageAlt: 'Керамическое зерно NQN — принцип самозатачивания под нагрузкой',
+      imageWidth: 1089,
+      imageHeight: 365,
       galleryImages: [
         { src: '/images/zernotgx.jpg', alt: 'Керамическое зерно TGX' },
         { src: '/images/zernonqn.jpg', alt: 'Керамическое зерно NQN' },
@@ -181,6 +181,31 @@ export default function Home() {
                 объединились и теперь производим и поставляем самые эффективные решения для Российской
                 промышленности.
               </p>
+            </div>
+          </Reveal>
+
+          <Reveal className="grid sm:grid-cols-2 gap-4 max-w-3xl mx-auto mt-8" delay={100}>
+            <div>
+              <Image
+                src="/images/factory.jpg"
+                alt="Производство GD-Abrasives в Китае"
+                width={1400}
+                height={1050}
+                sizes="(min-width: 640px) 45vw, 90vw"
+                className="w-full h-48 object-cover rounded-xl2 shadow-md"
+              />
+              <p className="text-xs text-center text-ink/50 mt-2">Производство GD-Abrasives, Цзянсу, Китай</p>
+            </div>
+            <div>
+              <Image
+                src="/images/exhibition.jpg"
+                alt="Стенд GD-Abrasives на промышленной выставке"
+                width={1400}
+                height={788}
+                sizes="(min-width: 640px) 45vw, 90vw"
+                className="w-full h-48 object-cover rounded-xl2 shadow-md"
+              />
+              <p className="text-xs text-center text-ink/50 mt-2">На отраслевой выставке в России</p>
             </div>
           </Reveal>
         </div>

@@ -1,5 +1,81 @@
 import React from 'react';
 import Image from 'next/image';
+import SpecComparisonChart from '@/components/SpecComparisonChart';
+
+function RaTable({ rows }: { rows: [string, string][] }) {
+  return (
+    <div className="overflow-x-auto rounded-lg border border-black/10">
+      <table className="w-full text-sm">
+        <thead>
+          <tr className="bg-accent/10">
+            <th className="text-left font-bold text-ink px-3 py-2">Размер зерна</th>
+            <th className="text-left font-bold text-ink px-3 py-2">Ra</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map(([grain, ra], i) => (
+            <tr key={grain} className={i % 2 === 1 ? 'bg-black/[0.02]' : ''}>
+              <td className="px-3 py-1.5 text-ink/80">{grain}</td>
+              <td className="px-3 py-1.5 text-ink/80 tabular-nums">{ra}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function SpecTable({
+  rollTypeLabel,
+  columns,
+  rows,
+}: {
+  rollTypeLabel: string;
+  columns: string[];
+  rows: [string, ...string[]][];
+}) {
+  return (
+    <div className="overflow-x-auto rounded-lg border border-black/10">
+      <table className="w-full text-sm whitespace-nowrap">
+        <thead>
+          <tr className="bg-accent/10">
+            <th className="text-left font-bold text-ink px-3 py-2">{rollTypeLabel}</th>
+            {columns.map((c) => (
+              <th key={c} className="text-left font-bold text-ink px-3 py-2">
+                {c}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {rows.map((row, i) => (
+            <tr key={row[0]} className={i % 2 === 1 ? 'bg-black/[0.02]' : ''}>
+              {row.map((cell, j) => (
+                <td
+                  key={j}
+                  className={`px-3 py-1.5 ${j === 0 ? 'font-bold text-ink' : 'text-ink/80 font-mono text-xs'}`}
+                >
+                  {cell}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+const EFFECT_ICON: Record<string, { symbol: string; className: string }> = {
+  up: { symbol: '↑', className: 'text-accent-dark' },
+  down: { symbol: '↓', className: 'text-ink/40' },
+  none: { symbol: '○', className: 'text-ink/30' },
+};
+
+function EffectCell({ effect }: { effect: 'up' | 'down' | 'none' }) {
+  const e = EFFECT_ICON[effect];
+  return <span className={`font-bold ${e.className}`}>{e.symbol}</span>;
+}
 
 export const tabContent = [
   {
@@ -8,14 +84,24 @@ export const tabContent = [
       <div>
         <h3 className="text-xl font-extrabold text-ink mb-4">Шлифовка прокатных валков</h3>
 
-        <div className="mb-6">
+        <p className="text-ink/70 mb-6">Валки — важная часть прокатных станов: давление, создаваемое парой или комплектом валков, формирует прокатываемую сталь. Распространённые типы валков — стальные, чугунные и кованые. Из-за динамических и статических нагрузок в процессе прокатки, а также деформаций от перепадов температуры, валки часто требуют перешлифовки.</p>
+
+        <div className="grid sm:grid-cols-2 gap-6 items-center mb-8">
+          <div className="bg-paper-soft rounded-xl2 p-6 text-sm text-ink/80 space-y-1.5">
+            <p><b>Станки:</b> HERKULES, POMINI, Waldrich Siegen, Jiustina, METEX и др.</p>
+            <p><b>Круги:</b> диаметром от 450 до 1100 мм, наиболее типовые: 01_750x80x305, 01_900x80x305, 01_915x80x304.8, 01_915x100x304.8, 01_1066x152x508, 01_1100x100x508, 1060x75x407.3 и др.</p>
+            <p><b>Тип зерна:</b> 30…70% зерна NQN и зёрна Vortex</p>
+            <p><b>Размер зерна:</b> F30-60 (и мельче, если есть требования)</p>
+            <p><b>Твёрдость:</b> C-D-F-G-H-I-J-K</p>
+            <p><b>Связка:</b> на бакелитовой основе</p>
+          </div>
           <Image
-            src="/images/valki.png"
-            alt="Шлифовка прокатных валков"
-            width={651}
-            height={241}
-            sizes="(min-width: 672px) 672px, 100vw"
-            className="w-full max-w-2xl mx-auto rounded-lg shadow-md h-auto"
+            src="/images/roll-photo-2.jpg"
+            alt="Прокатный валок после шлифовки"
+            width={1000}
+            height={563}
+            sizes="(min-width: 640px) 45vw, 100vw"
+            className="w-full h-auto rounded-xl2 shadow-md"
           />
         </div>
 
@@ -43,6 +129,21 @@ export const tabContent = [
           <p className="text-ink/70">В качестве материалов для валков используются чугун с длительным сроком службы (ICDP), сталь с высоким содержанием хрома (High-Cr) и быстрорежущая сталь (HSS). Требования к поверхности валков ГП ниже, чем к валкам холодной прокатки. Для более высокой скорости съёма и стойкости круга мы также добавляем зерно <span className="text-accent font-bold">NQN</span> последнего поколения от 20 до 40% или Vortex (<span className="text-ink font-extrabold">АА</span>).</p>
         </div>
 
+        <p className="text-ink/70 mb-4">Обычно используемый диапазон размеров абразивного зерна составляет приблизительно <b>F30-46</b> по FEPA. При горячей прокатке обычно используются круги из зелёного карбида кремния (SiC); на маломощных станках — чёрный карбид кремния (в обозначении буква «C» вместо «G»).</p>
+
+        <div className="grid sm:grid-cols-2 gap-4 mb-8">
+          <RaTable rows={[['30', '3,5-1,25'], ['36', '1,25-0,8'], ['46', '1,0-0,63']]} />
+          <SpecTable
+            rollTypeLabel="Тип валка ГП"
+            columns={['ICDP', 'High-Cr steel', 'High-Cr cast iron', 'HSS']}
+            rows={[
+              ['BEST', '3NQNG46IB08', '3NQNG36JB08', '5NQNG36IB08', '5NQNG46IB08'],
+              ['BETTER', '1CAAG46IB09', '1CAAG36JB09', '3CAAG36IB09', '1CAAG46IB09'],
+              ['GOOD', 'GC46IB06', 'WA36JB06', '1CAAG36IB06', 'GC46IB06'],
+            ]}
+          />
+        </div>
+
         <h4 className="text-xl font-extrabold text-ink mb-4">Круги для рабочих валков холодной прокатки (ХП)</h4>
         <div className="flex flex-col md:flex-row gap-8 mb-4">
           <p className="text-ink/70">С поверхности валка снимается меньше металла, но при этом требуется высокое качество поверхности. Диаметр рабочего валка составляет приблизительно от 300 до 900 мм, а длина составляет 2500-5000 мм. Размер абразивного зерна колеблется от F36 до 120 по FEPA. В качестве материалов для валков в основном используются кованая и быстрорежущая сталь (HSS).</p>
@@ -67,10 +168,44 @@ export const tabContent = [
           <p className="text-ink/70">При холодной прокатке, ввиду более высокой твердости валков, используются шлифовальные круги достаточно мягкие (градации твердости C…G) с высокой концентрацией керамического корунда <span className="text-accent font-bold">NQN</span> (20-70%), либо <span className="text-ink font-extrabold">Vortex</span>, чтобы минимизировать время перешлифовки. Если Вам важен минимальный по времени оборот валков на вальцешлифовальном участке – выбирайте спецификации BEST. Размер зерна выбирайте по таблице или из опыта. С помощью режимов обработки можно получать Ra в достаточно широком диапазоне. Но в шлифовании есть правило – выбирать максимально крупное зерно, которое может обеспечивать требуемую чистоту поверхности. Так Вы быстрее снимите нужный припуск и меньше времени потратите на правку круга, а резание будет более свободное, меньше прижогов, выше стойкость круга и ниже себестоимость операции.</p>
         </div>
 
+        <div className="grid sm:grid-cols-2 gap-4 mb-8">
+          <RaTable
+            rows={[
+              ['36', '0,8-1,25'],
+              ['46', '0,63-1,0'],
+              ['60', '0,5-0,8'],
+              ['80', '0,32-0,63'],
+              ['120', '0,16-0,32'],
+            ]}
+          />
+          <SpecTable
+            rollTypeLabel="Тип валка ХП"
+            columns={['Кованая сталь (ср./низкий Cr)', 'High-Cr steel', 'HSS']}
+            rows={[
+              ['BEST', '5NQN60CB10', '5NQN60CB10', '7NQNG46СB10'],
+              ['BETTER', 'WA60FB08', 'WA60FB08', '2CAAG46FB09'],
+              ['GOOD', 'A60FB06', 'WA60FB06', 'GC46FB06'],
+            ]}
+          />
+        </div>
+
         <h4 className="text-xl font-extrabold text-ink mb-4">Круги для опорных валков на горячие и холодные прокатные станы</h4>
         <p className="text-ink/70 mb-4">Опорные валки передают и поддерживают давление на рабочие валки. Они имеют больший диаметр, чем рабочие валки (до 1600 мм в диаметре). Валки бывают литыми или коваными. Опорные валки обычно изготавливаются из хромистой стали с содержанием хрома от 2 до 5 %. В некоторых случаях используется чугун с двойным литьём и быстрорежущая сталь (HSS). Опорные валки шлифуют не так часто, как рабочие, но, как правило, с них удаляется значительно больше материала (до 2 мм и более в диаметре). Зернистость обычно варьируется от 30 до 46 для достижения требуемой степени обработки поверхности.</p>
 
         <p className="text-ink/70 mb-4">На опорные валки обычно используются шлифовальные круги из обычного или белого оксида алюминия. Для более высокой скорости съёма и стойкости круга мы также добавляем зерно <span className="text-accent font-bold">NQN</span> последнего поколения от 20 до 40% или Vortex (<span className="text-ink font-extrabold">АА</span>).</p>
+
+        <div className="grid sm:grid-cols-2 gap-4 mb-8">
+          <RaTable rows={[['30', '1,3-3,5'], ['36', '1,0-3,0'], ['46', '0,7-2,0']]} />
+          <SpecTable
+            rollTypeLabel="Тип валка ГП"
+            columns={['Кованая сталь (средний и низкий Cr)']}
+            rows={[
+              ['BEST', '4NQN36JB10'],
+              ['BETTER', '2WAA36DB08'],
+              ['GOOD', 'WA36KB06'],
+            ]}
+          />
+        </div>
 
         <h4 className="text-xl font-extrabold text-ink mb-4">Влияние размера круга</h4>
         <ul className="text-ink/70 mb-6 space-y-2">
@@ -85,15 +220,142 @@ export const tabContent = [
           <li>• Тип абразива и связка также влияют на чистоту поверхности.</li>
         </ul>
 
-        <div className="mt-6">
-          <Image
-            src="/images/primer.png"
-            alt="Праймер по шлифовке прокатных валков"
-            width={1002}
-            height={1045}
-            sizes="(min-width: 672px) 672px, 100vw"
-            className="w-full max-w-2xl mx-auto rounded-lg shadow-md h-auto"
-          />
+        <h4 className="text-xl font-extrabold text-ink mb-4">Влияние параметров на процесс шлифования</h4>
+        <div className="overflow-x-auto rounded-lg border border-black/10 mb-2">
+          <table className="w-full text-sm whitespace-nowrap">
+            <thead>
+              <tr className="bg-accent/10">
+                <th className="text-left font-bold text-ink px-3 py-2">Параметр процесса</th>
+                <th className="text-center font-bold text-ink px-3 py-2" colSpan={2}>Скорость круга</th>
+                <th className="text-center font-bold text-ink px-3 py-2" colSpan={2}>Скорость валка</th>
+                <th className="text-center font-bold text-ink px-3 py-2" colSpan={2}>Продольная подача</th>
+                <th className="text-center font-bold text-ink px-3 py-2" colSpan={2}>Поперечная подача</th>
+              </tr>
+              <tr className="bg-accent/5 text-xs text-ink/50">
+                <th className="px-3 py-1"></th>
+                <th className="px-3 py-1">ниже</th>
+                <th className="px-3 py-1">выше</th>
+                <th className="px-3 py-1">ниже</th>
+                <th className="px-3 py-1">выше</th>
+                <th className="px-3 py-1">ниже</th>
+                <th className="px-3 py-1">выше</th>
+                <th className="px-3 py-1">ниже</th>
+                <th className="px-3 py-1">выше</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[
+                { label: 'Скорость съёма', vals: ['down', 'up', 'up', 'down', 'down', 'up', 'down', 'up'] },
+                { label: 'Износ круга', vals: ['up', 'down', 'down', 'up', 'down', 'up', 'down', 'up'] },
+                { label: 'Нагрузка', vals: ['down', 'up', 'up', 'down', 'down', 'up', 'down', 'up'] },
+                { label: 'Дробление', vals: ['down', 'up', 'none', 'none', 'down', 'up', 'down', 'up'] },
+                { label: 'Чистота Ra', vals: ['none', 'none', 'up', 'down', 'down', 'up', 'down', 'up'] },
+              ].map((row, i) => (
+                <tr key={row.label} className={i % 2 === 1 ? 'bg-black/[0.02]' : ''}>
+                  <td className="px-3 py-1.5 font-bold text-ink">{row.label}</td>
+                  {row.vals.map((v, j) => (
+                    <td key={j} className="px-3 py-1.5 text-center">
+                      <EffectCell effect={v as 'up' | 'down' | 'none'} />
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="text-xs text-ink/40 mb-8">↑ — рост показателя, ↓ — снижение показателя, ○ — эффекта нет.</p>
+
+        <h4 className="text-xl font-extrabold text-ink mb-6">Сравнение с конкурентами на реальных объектах</h4>
+        <div className="space-y-5 mb-8">
+          <div className="rounded-xl2 border border-black/10 bg-paper-soft p-6">
+            <p className="text-sm font-bold text-accent-dark mb-2">Пример 1</p>
+            <div className="grid sm:grid-cols-2 gap-x-6 gap-y-1 text-sm text-ink/80 mb-3">
+              <p><b>Станок:</b> Waldrich Siegen 500 кВт</p>
+              <p><b>Валок:</b> ICDP CE-75</p>
+              <p><b>Круг GD-Abrasives:</b> 01_1060x75x407.3 EQA36RB10, 63 м/с</p>
+              <p><b>Конкурент:</b> Norton 01_1060x75x407.3 QA36-RBT2, 63 м/с</p>
+              <p className="sm:col-span-2"><b>Требования по Ra:</b> 0,8</p>
+            </div>
+            <p className="text-sm text-ink/70">Производитель валков в России, поставляет валки практически всем российским клиентам и за пределы России. Круг GD-Abrasives показал коэффициент шлифования (GR) 50 на валках ICDP — у Norton показатель GR 30. Круг Norton не обеспечивал стабильную чистовую обработку на Ra 0,8 при шлифовке на финише более 300 мм по длине валка: нагрузка на поверхность круга росла, чистота ухудшалась. Круг GD-Abrasives обеспечивает стабильность Ra 0,8 по полной длине валка 2000 мм при подаче вперёд и назад. Производитель полностью перешёл на круги GD-Abrasives.</p>
+          </div>
+
+          <div className="rounded-xl2 border border-black/10 bg-paper-soft p-6">
+            <p className="text-sm font-bold text-accent-dark mb-2">Пример 2</p>
+            <div className="grid sm:grid-cols-2 gap-x-6 gap-y-1 text-sm text-ink/80">
+              <p><b>Станок:</b> 110 кВт</p>
+              <p><b>Валок:</b> Cr5 2130×470~530</p>
+              <p><b>Круг GD-Abrasives:</b> 01_915x100x304.8 AA46HB08, 50 м/с</p>
+              <p><b>Конкурент:</b> Atlantic EK3 46-H6 RE DP</p>
+              <p className="sm:col-span-2"><b>Требования по Ra:</b> 0,8</p>
+            </div>
+            <SpecComparisonChart
+              competitorName="Atlantic"
+              metrics={[
+                { label: 'GR — коэффициент шлифования', unit: '', gdValue: 4.12, competitorValue: 2.34 },
+                { label: 'MRR — скорость съёма металла', unit: '', gdValue: 27.24, competitorValue: 20.63 },
+              ]}
+            />
+          </div>
+
+          <div className="rounded-xl2 border border-black/10 bg-paper-soft p-6">
+            <p className="text-sm font-bold text-accent-dark mb-2">Пример 3</p>
+            <div className="grid sm:grid-cols-2 gap-x-6 gap-y-1 text-sm text-ink/80">
+              <p><b>Станок:</b> 135 кВт</p>
+              <p><b>Валок:</b> High-Cr 1580×650~690</p>
+              <p><b>Круг GD-Abrasives:</b> 01_915x100x304.8 3NQNG46JB08, 50 м/с</p>
+              <p><b>Конкурент:</b> Norton 01_915x100x304.8 39C46KB24, 50 м/с</p>
+              <p className="sm:col-span-2"><b>Требования по Ra:</b> 0,8</p>
+            </div>
+            <SpecComparisonChart
+              competitorName="Norton"
+              metrics={[
+                { label: 'GR — коэффициент шлифования', unit: '', gdValue: 3.75, competitorValue: 1.96 },
+                { label: 'MRR — скорость съёма металла', unit: '', gdValue: 17.16, competitorValue: 8.42 },
+              ]}
+            />
+          </div>
+
+          <div className="rounded-xl2 border border-black/10 bg-paper-soft p-6">
+            <p className="text-sm font-bold text-accent-dark mb-2">Пример 4</p>
+            <div className="grid sm:grid-cols-2 gap-x-6 gap-y-1 text-sm text-ink/80">
+              <p><b>Станок:</b> 135 кВт</p>
+              <p><b>Валок:</b> HSS 2250×650~690</p>
+              <p><b>Круг GD-Abrasives:</b> 01_914x102x508 3NQNG46IB08, 50 м/с</p>
+              <p><b>Конкурент:</b> Norton 01_914x102x508 3SG46JB24, 50 м/с</p>
+              <p className="sm:col-span-2"><b>Требования по Ra:</b> в норме</p>
+            </div>
+            <SpecComparisonChart
+              competitorName="Norton"
+              metrics={[
+                { label: 'GR — коэффициент шлифования', unit: '', gdValue: 3.36, competitorValue: 2.22 },
+                { label: 'MRR — скорость съёма металла', unit: '', gdValue: 57, competitorValue: 48 },
+              ]}
+            />
+          </div>
+        </div>
+        <p className="text-xs text-ink/40 mb-8">GR — коэффициент шлифования, MRR — скорость съёма металла.</p>
+
+        <h4 className="text-xl font-extrabold text-ink mb-4">Упаковка и контроль качества</h4>
+        <div className="grid sm:grid-cols-2 gap-6 items-start mb-2">
+          <p className="text-ink/70">Круги GD-Abrasives надёжно упакованы в деревянные ящики с этикеткой: размеры, спецификация, дата производства, артикул, стандарт и номер партии. В каждом ящике — сертификат качества на партию и две прокладки для планшайб. Каждая партия проходит контроль геометрии перед отгрузкой.</p>
+          <div className="grid grid-cols-2 gap-3">
+            <Image
+              src="/images/certificate.jpg"
+              alt="Сертификат соответствия GD-Abrasives"
+              width={900}
+              height={300}
+              sizes="(min-width: 640px) 25vw, 45vw"
+              className="w-full h-32 object-cover object-top rounded-lg shadow-md"
+            />
+            <Image
+              src="/images/qc-1.jpg"
+              alt="Контроль геометрии круга штангенциркулем"
+              width={900}
+              height={1600}
+              sizes="(min-width: 640px) 25vw, 45vw"
+              className="w-full h-32 object-cover rounded-lg shadow-md"
+            />
+          </div>
         </div>
       </div>
     ),
@@ -114,11 +376,118 @@ export const tabContent = [
               <li>Размер кругов и текущую спецификацию, потребность в месяц</li>
               <li>Материал детали, твёрдость в HRC, её линейные размеры и поперечное сечение в месте реза</li>
               <li>Температуру материала в момент резания</li>
-              <li>Модель станка и кинематику процесса резания, скорость резания</li>
+              <li>Модель станка и кинематику процесса резания (см. схемы ниже), скорость резания</li>
               <li>Параметры, которые планируете улучшить</li>
             </ul>
           </div>
-          <p className="text-sm text-ink/50 italic pt-4">Дополнительная техническая информация, включая схемы и таблицы, доступна по запросу.</p>
+
+          <h4 className="text-xl font-extrabold text-ink pt-2">Типоразмеры кругов</h4>
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div>
+              <p className="text-sm font-bold text-ink mb-2">TYPE T41 — TAPERED</p>
+              <div className="overflow-x-auto rounded-lg border border-black/10">
+                <table className="w-full text-xs whitespace-nowrap">
+                  <thead>
+                    <tr className="bg-accent/10">
+                      <th className="text-left font-bold text-ink px-2 py-1.5">D, мм</th>
+                      <th className="text-left font-bold text-ink px-2 py-1.5">Ta/Ti, мм</th>
+                      <th className="text-left font-bold text-ink px-2 py-1.5">H, мм</th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-ink/80">
+                    {[
+                      ['750', '8/7', '80 100 127 152,4'],
+                      ['800', '8/7', '80 100 127 152,4'],
+                      ['1000', '11/10', '100 127 152,4'],
+                      ['1220-1600', '12/11-16/15', '100 127 152,4 200 203,2 230 280'],
+                      ['1800', '17/16', '203 230 280'],
+                      ['2000', '18/17', 'по запросу'],
+                    ].map(([d, t, h], i) => (
+                      <tr key={d} className={i % 2 === 1 ? 'bg-black/[0.02]' : ''}>
+                        <td className="px-2 py-1">{d}</td>
+                        <td className="px-2 py-1">{t}</td>
+                        <td className="px-2 py-1">{h}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div>
+              <p className="text-sm font-bold text-ink mb-2">TYPE T42 — со стальным центром</p>
+              <div className="overflow-x-auto rounded-lg border border-black/10">
+                <table className="w-full text-xs whitespace-nowrap">
+                  <thead>
+                    <tr className="bg-accent/10">
+                      <th className="text-left font-bold text-ink px-2 py-1.5">D, мм</th>
+                      <th className="text-left font-bold text-ink px-2 py-1.5">T, мм</th>
+                      <th className="text-left font-bold text-ink px-2 py-1.5">H, мм</th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-ink/80">
+                    {[
+                      ['600', '6-7,5', '40 60 76,2 80 100'],
+                      ['800*', '8-9', '80 100 127 152,4'],
+                    ].map(([d, t, h], i) => (
+                      <tr key={d} className={i % 2 === 1 ? 'bg-black/[0.02]' : ''}>
+                        <td className="px-2 py-1">{d}</td>
+                        <td className="px-2 py-1">{t}</td>
+                        <td className="px-2 py-1">{h}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <p className="text-xs text-ink/40 mt-1">* Возможна поставка в конической версии.</p>
+              <p className="text-sm font-bold text-ink mb-2 mt-4">Прямой профиль (без конуса)</p>
+              <div className="overflow-x-auto rounded-lg border border-black/10">
+                <table className="w-full text-xs whitespace-nowrap">
+                  <thead>
+                    <tr className="bg-accent/10">
+                      <th className="text-left font-bold text-ink px-2 py-1.5">D, мм</th>
+                      <th className="text-left font-bold text-ink px-2 py-1.5">T, мм</th>
+                      <th className="text-left font-bold text-ink px-2 py-1.5">H, мм</th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-ink/80">
+                    {[
+                      ['800', '7/6', '80 100 127 152,4'],
+                      ['1000', '9/8', '100 127 152,4'],
+                      ['1220-1600', '11/10-14/13', '100 127 152,4 230 280'],
+                    ].map(([d, t, h], i) => (
+                      <tr key={d} className={i % 2 === 1 ? 'bg-black/[0.02]' : ''}>
+                        <td className="px-2 py-1">{d}</td>
+                        <td className="px-2 py-1">{t}</td>
+                        <td className="px-2 py-1">{h}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <h4 className="text-xl font-extrabold text-ink pt-4">Кинематика процесса резания</h4>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            {[
+              { src: '/images/cut-pendulum.jpg', alt: 'Маятниковая отрезка', label: 'Маятниковая отрезка' },
+              { src: '/images/cut-throughfeed.jpg', alt: 'Резка на проход', label: 'Резка на проход' },
+              { src: '/images/cut-rotation.jpg', alt: 'Резка с вращением детали', label: 'Резка с вращением детали' },
+              { src: '/images/cut-oscillation.jpg', alt: 'Резка с горизонтальной осцилляцией', label: 'Резка с горизонтальной осцилляцией' },
+            ].map((d) => (
+              <div key={d.label}>
+                <Image
+                  src={d.src}
+                  alt={d.alt}
+                  width={500}
+                  height={308}
+                  sizes="(min-width: 1024px) 25vw, 50vw"
+                  className="w-full h-auto rounded-lg border border-black/10 bg-white"
+                />
+                <p className="text-xs text-center text-ink/60 mt-1.5">{d.label}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     ),
@@ -129,29 +498,86 @@ export const tabContent = [
       <div>
         <h3 className="text-2xl font-extrabold text-ink mb-4">Шлифовка торцев пружин</h3>
         <div className="space-y-6 text-ink/80">
-          <p>Торцевая шлифовка пружин сжатия — финишная операция, от которой напрямую зависит перпендикулярность опорных витков оси пружины и равномерность распределения нагрузки в узле. Отклонение по перпендикулярности выше нормы даёт перекос при осевом нагружении, локальные перенапряжения и преждевременную усталостную поломку.</p>
-          <p>Материал пружин — пружинная сталь (51CrV4, 60С2А, 60Si2MnA и аналоги) после закалки и отпуска, твёрдость обычно HRC 45–55. Съём при этом небольшой, но металл твёрдый и вязкий, поэтому круг должен резать свободно, без затупления и прижогов на торце витка.</p>
-          <p>Шлифовка ведётся на дуплексных торцешлифовальных станках с двумя противоположными шпинделями (пружина проходит между кругами по вращающемуся столу) либо на одностороннем вертикально-шпиндельном станке с поворотным столом — для более крупных или нестандартных пружин.</p>
+          <p>Шлифование торцев пружин — одна из наиболее сложных операций: не все производители кругов способны обеспечить нужное время цикла и стойкость одновременно при обработке комплекта пружин на современных станках.</p>
 
-          <div className="bg-accent/5 border-l-4 border-accent p-6 rounded-r-lg mt-6">
-            <h4 className="font-bold text-lg mb-3 text-accent-dark">Что мы рекомендуем по спецификации</h4>
-            <ul className="list-disc list-inside space-y-2 text-ink/80">
-              <li>Зерно среднее для стока металла (F30-F46) — быстрый съём без прижога на закалённой проволоке</li>
-              <li>Твёрдость круга G-J на керамической связке — стабильная геометрия под нагрузкой на дуплексных станках</li>
-              <li>Возможна добавка керамического зерна <span className="text-accent font-bold">NQN</span> для повышения стойкости при серийном производстве</li>
-            </ul>
+          <div className="grid sm:grid-cols-2 gap-8 items-center">
+            <Image
+              src="/images/spring-wheel.jpg"
+              alt="Круг GD-Abrasives 1000x150x200 для шлифовки торцев пружин"
+              width={1100}
+              height={619}
+              sizes="(min-width: 640px) 45vw, 100vw"
+              className="w-full h-auto rounded-lg shadow-md"
+            />
+            <div className="text-sm text-ink/80 space-y-1.5">
+              <p><b>Наиболее распространённые станки:</b> OMD (Италия), Schenker (Германия), WNJ и JINKONGKEJI (Китай)</p>
+              <p><b>Форма кругов:</b> 36 — для работы торцевой поверхностью, с гайками, с перфорацией</p>
+              <p><b>Тип зерна:</b> 30…70% керамического зерна последнего поколения NQN</p>
+              <p><b>Размер зерна:</b> F16-20-24 (и мельче, если есть требования)</p>
+              <p><b>Твёрдость:</b> K-L-M-N-O-P</p>
+              <p><b>Связка:</b> на бакелитовой основе</p>
+            </div>
           </div>
+
+          <h4 className="text-xl font-extrabold text-ink">Типовые размеры кругов, мм</h4>
+          <div className="overflow-x-auto rounded-lg border border-black/10">
+            <table className="w-full text-sm">
+              <tbody className="text-ink/80">
+                {[
+                  '1000x150x200, 1000x150x300',
+                  '915x120x200, 915x120x350, 915x100x270, 900x120x350',
+                  '660x100x150, 660x100x170',
+                  '600x80x305',
+                  '450x80x40',
+                  '400x60x40',
+                ].map((row, i) => (
+                  <tr key={row} className={i % 2 === 1 ? 'bg-black/[0.02]' : ''}>
+                    <td className="px-3 py-1.5">{row} мм</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="text-sm text-ink/60">Перфорация служит для лучшего охлаждения и удаления шлама из зоны шлифования — может быть сквозной или только до слоя с гайками. На диаметрах кругов &lt;450 мм круги делают без перфорации. Важно согласовать чертёж расположения гаек перед заказом.</p>
+
+          <div className="bg-accent/5 border-l-4 border-accent p-6 rounded-r-lg">
+            <h4 className="font-bold text-lg mb-3 text-accent-dark">Пример из практики</h4>
+            <div className="grid sm:grid-cols-2 gap-x-6 gap-y-1 text-sm text-ink/80 mb-3">
+              <p><b>Станок:</b> OMD HA100-2/2 (Италия)</p>
+              <p><b>Деталь:</b> наружная пружина вагонного комплекта d30 D200 L258, сталь 60С2ХФА, вальцованная</p>
+              <p className="sm:col-span-2"><b>Спецификация круга:</b> GD-Abrasives 36_1000x150x200 3NQNJ20NB980, 45 м/с</p>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center pt-2 border-t border-accent/20">
+              <div>
+                <p className="text-lg font-extrabold text-accent">2:30</p>
+                <p className="text-xs text-ink/60">время цикла</p>
+              </div>
+              <div>
+                <p className="text-lg font-extrabold text-accent">6</p>
+                <p className="text-xs text-ink/60">циклов между правками</p>
+              </div>
+              <div>
+                <p className="text-lg font-extrabold text-accent">18 500</p>
+                <p className="text-xs text-ink/60">пружин / 12 смен по 12ч</p>
+              </div>
+              <div>
+                <p className="text-lg font-extrabold text-accent">5-7 мм</p>
+                <p className="text-xs text-ink/60">съём на сторону</p>
+              </div>
+            </div>
+          </div>
+
+          <p>Время цикла шлифовки одной закладки кассеты даже на пружинах диаметром до 30 мм составляет от 2 до 5 минут; при большом съёме материала — до 10 минут максимум. Подбираем спецификацию под размер и геометрию пружин, материал, мощность станка и тип СОЖ — оптимизируя время цикла, стойкость круга и себестоимость шлифовки одной детали.</p>
 
           <div className="bg-accent/5 border-l-4 border-accent p-6 rounded-r-lg mt-6">
             <h4 className="font-bold text-lg mb-3 text-accent-dark">Для подбора спецификации укажите в запросе:</h4>
             <ul className="list-disc list-inside space-y-2 text-ink/80">
-              <li>Модель станка (дуплекс / одношпиндельный) и текущий размер круга</li>
+              <li>Модель станка и текущий размер круга</li>
               <li>Диаметр проволоки, наружный диаметр пружины, материал и твёрдость HRC</li>
               <li>Требуемую перпендикулярность торца и шероховатость поверхности</li>
               <li>Текущую стойкость круга и производительность (шт/мин или шт/смену)</li>
             </ul>
           </div>
-          <p className="text-sm text-ink/50 italic pt-4">Дополнительная техническая информация, включая схемы и таблицы, доступна по запросу.</p>
         </div>
       </div>
     ),
@@ -162,29 +588,102 @@ export const tabContent = [
       <div>
         <h3 className="text-2xl font-extrabold text-ink mb-4">Зубошлифование</h3>
         <div className="space-y-6 text-ink/80">
-          <p>Зубошлифование — финишная операция обработки боковой поверхности зуба после цементации и закалки, когда термообработка «уводит» профиль и требуется восстановить точность до нужного класса (по DIN/AGMA или ГОСТ 1643). Это одна из самых требовательных операций шлифования: цена ошибки — прижог или микротрещина в зоне высоких контактных напряжений зуба.</p>
-          <p>Есть два принципиально разных метода: <b>профильное шлифование</b> (копирование готового эвольвентного профиля, например на станках типа Klingelnberg, Höfler) и <b>обкатное (generating) шлифование</b> червячным или тарельчатым кругом (Reishauer, Niles, Kapp) — для крупносерийного производства зубчатых колёс средних модулей.</p>
-          <p>На крупномодульных колёсах (модуль от 8–10 мм и выше — редукторы, буровое и горнодобывающее оборудование) чаще используется профильное шлифование фасонным кругом на керамической связке, где важна точность правки профиля и стойкость к засаливанию.</p>
+          <p><b>Профильное шлифование</b> зубчатых колёс кругами 4 формы с зерном TG или NQN и высокоэффективной связкой V80 — для лучшего сохранения профиля круга и работы на скорости круга до 80 м/с.</p>
 
-          <div className="bg-accent/5 border-l-4 border-accent p-6 rounded-r-lg mt-6">
-            <h4 className="font-bold text-lg mb-3 text-accent-dark">Что мы рекомендуем по спецификации</h4>
-            <ul className="list-disc list-inside space-y-2 text-ink/80">
-              <li>Зерно мелкое-среднее (F60-F150) в зависимости от требуемой шероховатости профиля</li>
-              <li>Керамическое зерно <span className="text-accent font-bold">TGX</span> или <span className="text-accent font-bold">NQN</span> — свободное резание без прижога на цементированном слое</li>
-              <li>Пористая структура связки для отвода тепла и подачи СОЖ в зону контакта</li>
-            </ul>
+          <div className="overflow-x-auto rounded-lg border border-black/10">
+            <table className="w-full text-sm whitespace-nowrap">
+              <thead>
+                <tr className="bg-accent/10">
+                  <th className="text-left font-bold text-ink px-3 py-2">Станок</th>
+                  <th className="text-left font-bold text-ink px-3 py-2">Размер круга</th>
+                  <th className="text-left font-bold text-ink px-3 py-2">Спецификация</th>
+                </tr>
+              </thead>
+              <tbody className="text-ink/80">
+                {[
+                  ['Hofler Helix 400', 'PSX400X50X127', '3SG60/80GH12V80P'],
+                  ['Hofler Rapid 1500', 'PSX400X60X127', '3SG60/80GH12V80P'],
+                  ['Hofler Rapid 1800', 'PSX500X63X160', '3SG60/80GH12V80P'],
+                  ['Kapp VAS 55P', 'PSX400X40X127', '3SG60/80GH12V80P'],
+                ].map(([m, s, spec], i) => (
+                  <tr key={m} className={i % 2 === 1 ? 'bg-black/[0.02]' : ''}>
+                    <td className="px-3 py-1.5 font-bold text-ink">{m}</td>
+                    <td className="px-3 py-1.5 font-mono text-xs">{s}</td>
+                    <td className="px-3 py-1.5 font-mono text-xs">{spec}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <p><b>Непрерывное (обкатное) шлифование</b> червячными кругами с зерном NQN и связкой V80 — для удержания профиля круга на скорости до 80 м/с:</p>
+          <div className="overflow-x-auto rounded-lg border border-black/10">
+            <table className="w-full text-xs whitespace-nowrap">
+              <tbody className="text-ink/80">
+                {[
+                  ['220x180x90-SA80J-V80-75M/S', '220x180x90-3SG80J-V80-75M/S'],
+                  ['240x230x110-SA80J-V80-63M/S', '300x125x160-3SG80J-V80-63M/S'],
+                  ['275x160x160-SA80J-V80-80M/S', '300x145x160-3SG80J-V80-80M/S'],
+                  ['275x125x160-SA80J-V80-80M/S', '350x104x160-3SG80J-VH-35M/S'],
+                  ['280x160x115-SA80J-V80-63M/S', '400x100x203-3SG80J-V80-35M/S'],
+                ].map(([a, b], i) => (
+                  <tr key={a} className={i % 2 === 1 ? 'bg-black/[0.02]' : ''}>
+                    <td className="px-3 py-1.5">{a}</td>
+                    <td className="px-3 py-1.5">{b}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <p><b>Шлифование конических зубчатых колёс</b> со связкой V80 и зерном TG или NQN — для удержания профиля круга, высокой производительности и скорости круга до 80 м/с:</p>
+          <div className="overflow-x-auto rounded-lg border border-black/10">
+            <table className="w-full text-sm whitespace-nowrap">
+              <thead>
+                <tr className="bg-accent/10">
+                  <th className="text-left font-bold text-ink px-3 py-2">Размер круга</th>
+                  <th className="text-left font-bold text-ink px-3 py-2">Спецификация</th>
+                </tr>
+              </thead>
+              <tbody className="text-ink/80">
+                {[
+                  ['220×95×170', '3SG80J8V80'],
+                  ['260×110×200', '5SG80J8V80'],
+                  ['312×98×251', '5SG80J8V80'],
+                  ['330×98×193', '5SG80J8V80'],
+                  ['335×110×270', '5SG80J8V80'],
+                  ['386×98×312', '5SG80J8V80'],
+                ].map(([s, spec], i) => (
+                  <tr key={s} className={i % 2 === 1 ? 'bg-black/[0.02]' : ''}>
+                    <td className="px-3 py-1.5 font-mono text-xs">{s}</td>
+                    <td className="px-3 py-1.5 font-mono text-xs">{spec}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="flex flex-col sm:flex-row gap-6 items-center">
+            <p className="flex-1">Для крупномодульных зубчатых колёс, где обкатное шлифование неприменимо, также поставляем круги на керамической и органической связках с премиальным зерном NQN — под любые операции зубошлифования, включая CBN-инструмент для сверхточных финишных проходов.</p>
+            <Image
+              src="/images/cbn-wheel.jpg"
+              alt="CBN-круг для прецизионного зубошлифования"
+              width={1080}
+              height={1920}
+              sizes="180px"
+              className="w-40 h-auto rounded-lg shadow-md shrink-0"
+            />
           </div>
 
           <div className="bg-accent/5 border-l-4 border-accent p-6 rounded-r-lg mt-6">
             <h4 className="font-bold text-lg mb-3 text-accent-dark">Для подбора спецификации укажите в запросе:</h4>
             <ul className="list-disc list-inside space-y-2 text-ink/80">
-              <li>Метод шлифования (профильное / обкатное) и модель станка</li>
+              <li>Метод шлифования (профильное / обкатное / коническое) и модель станка</li>
               <li>Модуль зубчатого колеса, число зубьев, угол наклона</li>
               <li>Материал, вид термообработки и твёрдость поверхностного слоя HRC</li>
               <li>Требуемый класс точности и шероховатость Ra</li>
             </ul>
           </div>
-          <p className="text-sm text-ink/50 italic pt-4">Дополнительная техническая информация, включая схемы и таблицы, доступна по запросу.</p>
         </div>
       </div>
     ),
