@@ -6,12 +6,12 @@
     "dev": "node --no-experimental-webstorage node_modules/next/dist/bin/next dev",
     "build": "node --no-experimental-webstorage node_modules/next/dist/bin/next build",
     "start": "node --no-experimental-webstorage node_modules/next/dist/bin/next start",
-    "lint": "next lint"
+    "lint": "eslint ."
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
     "autoprefixer": "10.4.16",
-    "next": "^15.5.24",
+    "next": "^16.3.3",
     "nodemailer": "^9.0.6",
     "postcss": "^8.5.26",
     "react": "^18.3.1",
@@ -24,8 +24,8 @@
     "@types/nodemailer": "^6.4.17",
     "@types/react": "^18.2.45",
     "@types/react-dom": "^18.2.18",
-    "eslint": "^8.57.0",
-    "eslint-config-next": "^15.5.24",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.3.3",
     "typescript": "5.3.3"
   }
 }

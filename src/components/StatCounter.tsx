@@ -21,15 +21,17 @@ export default function StatCounter({ value, prefix = '', suffix = '', duration 
     const el = ref.current;
     if (!el) return;
 
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      setDisplay(value);
-      return;
-    }
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry.isIntersecting) return;
         observer.disconnect();
+
+        if (prefersReducedMotion) {
+          setDisplay(value);
+          return;
+        }
 
         const start = performance.now();
         const tick = (now: number) => {

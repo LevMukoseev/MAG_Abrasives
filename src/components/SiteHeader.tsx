@@ -22,18 +22,25 @@ export default function SiteHeader() {
   useEffect(() => {
     const heroElement = document.getElementById('hero');
     if (!heroElement) {
-      // На страницах без hero (например /privacy) хедер всегда сплошной.
-      setIsSolid(true);
+      // На страницах без hero (например /privacy) хедер всегда сплошной —
+      // isSolid уже true по умолчанию, дополнительный setState не нужен.
       return;
     }
 
-    setIsSolid(false);
+    // rAF, а не синхронный setState — IntersectionObserver-коллбэк не
+    // гарантированно приходит мгновенно (в проде видели задержки), а
+    // requestAnimationFrame всё равно успевает до отрисовки кадра, так что
+    // "мигания" сплошного хедера над hero не будет.
+    const frame = requestAnimationFrame(() => setIsSolid(false));
     const observer = new IntersectionObserver(
       ([entry]) => setIsSolid(!entry.isIntersecting),
       { rootMargin: '-100px 0px 0px 0px' }
     );
     observer.observe(heroElement);
-    return () => observer.disconnect();
+    return () => {
+      cancelAnimationFrame(frame);
+      observer.disconnect();
+    };
   }, []);
 
   return (
