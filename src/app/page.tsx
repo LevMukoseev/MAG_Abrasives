@@ -128,8 +128,8 @@ export default function Home() {
 
             <div className="relative aspect-[4/3] overflow-hidden rounded-xl2 shadow-2xl lg:aspect-[5/4]">
               <Image
-                src="/images/factory.jpg"
-                alt="Производство шлифовальных кругов Jiangsu GD-Abrasives"
+                src="/images/catalog/gd-grain-macro.jpg"
+                alt="Керамическое зерно NQN под увеличением"
                 fill
                 sizes="(max-width: 1024px) 92vw, 560px"
                 className="object-cover"
@@ -137,7 +137,7 @@ export default function Home() {
               />
               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/85 to-transparent p-5 pt-12">
                 <p className="text-[13px] font-semibold text-white/85">
-                  Производственная площадка Jiangsu GD-Abrasives, провинция Цзянсу
+                  Керамическое зерно NQN последнего поколения — основа наших кругов
                 </p>
               </div>
             </div>
@@ -235,9 +235,14 @@ export default function Home() {
                 </span>
                 <h3 className="text-lg font-black text-ink">Veiyee (LaiZhou Weiyi)</h3>
                 <p className="mt-2.5 text-[13.5px] leading-relaxed text-ink/60">
-                  Твердомеры Роквелла, Бринелля и Виккерса, металлографические станки, спектрометры.
-                  Завод с 2001 года, ISO 9001 с 2004, экспорт в 70+ стран, среди клиентов —
-                  Университет Цинхуа.
+                  Твердомеры Роквелла, Бринелля и Виккерса, металлографические станки резки,
+                  шлифовки-полировки и запрессовки образцов, оптико-эмиссионные спектрометры.
+                  Завод в Лайчжоу с 2001 года, ISO 9001 с 2004, сертификат ЕС с 2011, экспорт в
+                  70+ стран.
+                </p>
+                <p className="mt-2 text-[12.5px] leading-relaxed text-ink/45">
+                  Национальное высокотехнологичное предприятие, 10 дочерних компаний. Среди
+                  клиентов — Университет Цинхуа, отраслевые НИИ и более сотни автопроизводителей.
                 </p>
                 <a
                   href="#form"
