@@ -128,8 +128,8 @@ export default function Home() {
 
             <div className="relative aspect-[4/3] overflow-hidden rounded-xl2 shadow-2xl lg:aspect-[5/4]">
               <Image
-                src="/images/catalog/gd-grain-macro.jpg"
-                alt="Керамическое зерно NQN под увеличением"
+                src="/images/catalog/ya-wheels-studio.jpg"
+                alt="Шлифовальные круги GD-Abrasives"
                 fill
                 sizes="(max-width: 1024px) 92vw, 560px"
                 className="object-cover"
@@ -137,7 +137,7 @@ export default function Home() {
               />
               <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/85 to-transparent p-5 pt-12">
                 <p className="text-[13px] font-semibold text-white/85">
-                  Керамическое зерно NQN последнего поколения — основа наших кругов
+                  Круги премиальных спецификаций с керамическим зерном NQN
                 </p>
               </div>
             </div>
@@ -298,12 +298,12 @@ export default function Home() {
                   className="h-[170px] w-full rounded-xl2 object-cover"
                 />
                 <Image
-                  src="/images/catalog/gd-wheels-spread.jpg"
-                  alt="Линейка шлифовальных кругов GD-Abrasives"
-                  width={900}
-                  height={451}
+                  src="/images/catalog/ya-warehouse-1.jpg"
+                  alt="Складской запас в России"
+                  width={1300}
+                  height={975}
                   sizes="(max-width: 1024px) 45vw, 260px"
-                  className="h-[170px] w-full rounded-xl2 bg-paper-soft object-contain p-2"
+                  className="h-[170px] w-full rounded-xl2 object-cover"
                 />
                 <Image
                   src="/images/certificate.jpg"
