@@ -17,3 +17,11 @@
 - `public/images/catalog/gd-dressers.jpg` — существовавшее в проекте фото правящего алмазного инструмента; оставлено как обложка категории.
 
 Имена марок в DOCX не подтверждают эксклюзивность, дилерский статус или разрешения на товарные знаки. Точные условия испытаний категории 5 в карточке не раскрываются; протоколы для публикации не приложены.
+
+## Deputy general director feedback — 2026-11-07
+
+Source: Mikhail's 20-second voice message supplied by the site owner on 2026-11-07. The original recording remains in the ignored local attachments directory.
+
+- Category 03: Mikhail confirmed that diamond tooling is supplied under the company's own brand. The public brand caption is now GD-Abrasives. The cover uses the existing unbranded product photo `ya-cbn-1.jpg`; the supplier-branded `gd-diamond-wheels.jpg` catalogue image is no longer displayed in this category. Historical manufacturer attribution above remains source provenance, not a statement that GD manufactures every product.
+- Category 13: use “Станки для обработки литья” rather than “Станки для обдирки литья”. Mikhail explained that the range includes both grinding and cutting machines. The description now names cutting, grinding and fettling; the stable category slug remains `casting-machines`.
+- This feedback does not confirm official supplier status, additional machine models or specifications. Those evidence gaps remain open.
