@@ -163,7 +163,7 @@ export default function CategoryModal({ category, onClose }: CategoryModalProps)
               ))}
             </ul>
 
-            <p className="mt-5 text-xs text-ink/45">
+            <p className="mt-5 text-xs text-ink/70">
               Производитель: <span className="font-semibold text-ink/60">{category.brand}</span>
             </p>
 

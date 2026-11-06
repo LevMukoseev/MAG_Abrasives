@@ -67,7 +67,7 @@ export default function CatalogSection() {
                       <span className="font-mono text-4xl font-bold text-accent/20">{c.num}</span>
                     </div>
                   )}
-                  <span className="absolute left-3 top-3 rounded-md bg-white/85 px-2 py-1 font-mono text-[11px] font-bold text-accent backdrop-blur-sm">
+                  <span className="absolute left-3 top-3 rounded-md bg-white/90 px-2 py-1 font-mono text-[11px] font-bold text-accent backdrop-blur-sm">
                     {c.num}
                   </span>
                   {c.gallery.length > 0 && (
@@ -79,7 +79,7 @@ export default function CatalogSection() {
 
                 <div className="flex min-w-0 flex-1 flex-col p-5">
                   <h3 className="break-words text-[15.5px] font-extrabold leading-snug text-ink">{c.title}</h3>
-                  <p className="mt-1.5 text-[13px] leading-relaxed text-ink/55">{c.desc}</p>
+                  <p className="mt-1.5 text-[13px] leading-relaxed text-ink/70">{c.desc}</p>
                   <div className="mt-auto flex min-w-0 items-center justify-between gap-2 pt-4">
                     <span className="min-w-0 break-words font-mono text-[12px] font-semibold text-accent-dark">{c.range}</span>
                     <span

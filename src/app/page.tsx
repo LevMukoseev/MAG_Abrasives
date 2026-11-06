@@ -136,8 +136,8 @@ export default function Home() {
                 className="object-cover"
                 priority
               />
-              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/85 to-transparent p-5 pt-12">
-                <p className="text-[13px] font-semibold text-white/85">
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-ink/[0.85] to-transparent p-5 pt-12">
+                <p className="text-[13px] font-semibold text-white/90">
                   Круги премиальных спецификаций с керамическим зерном NQN
                 </p>
               </div>
@@ -241,7 +241,7 @@ export default function Home() {
                   Завод в Лайчжоу с 2001 года, ISO 9001 с 2004, сертификат ЕС с 2011, экспорт в
                   70+ стран.
                 </p>
-                <p className="mt-2 text-[12.5px] leading-relaxed text-ink/45">
+                <p className="mt-2 text-[12.5px] leading-relaxed text-ink/70">
                   Национальное высокотехнологичное предприятие, 10 дочерних компаний. Среди
                   клиентов — Университет Цинхуа, отраслевые НИИ и более сотни автопроизводителей.
                 </p>
@@ -279,11 +279,11 @@ export default function Home() {
                   <p className="text-2xl font-black text-accent">
                     50 <span className="text-sm font-bold text-ink/50">vs 30</span>
                   </p>
-                  <p className="text-xs text-ink/55">коэффициент шлифования GR</p>
+                  <p className="text-xs text-ink/70">коэффициент шлифования GR</p>
                 </div>
                 <div>
                   <p className="text-2xl font-black text-accent">2000 мм</p>
-                  <p className="text-xs text-ink/55">стабильный Ra 0,8 по всей длине</p>
+                  <p className="text-xs text-ink/70">стабильный Ra 0,8 по всей длине</p>
                 </div>
               </div>
             </Reveal>

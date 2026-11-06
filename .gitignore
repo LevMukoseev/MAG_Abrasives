@@ -32,6 +32,7 @@ yarn-error.log*
 .claude/
 .cursor/
 .vercel/
+.codex-remote-attachments/
 
 # tooling artifacts
 tsconfig.tsbuildinfo

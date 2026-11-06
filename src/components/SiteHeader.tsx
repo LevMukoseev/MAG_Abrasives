@@ -45,7 +45,7 @@ export default function SiteHeader() {
   const homeHref = (hash: string) => pathname === '/' ? hash : `/${hash}`;
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-ink shadow-lg">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-ink text-white shadow-lg">
       {/* Утилитарная строка с реквизитами — только на широких экранах */}
       <div className="hidden border-b border-white/10 lg:block">
         <div className="container mx-auto flex items-center justify-between px-4 py-1.5 text-[12.5px] text-white/60">
@@ -70,7 +70,7 @@ export default function SiteHeader() {
 
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between gap-4">
-          <a href={homeHref('#hero')} className="flex shrink-0 items-center gap-2.5">
+          <a href={homeHref('#hero')} onClick={() => setIsOpen(false)} className="flex shrink-0 items-center gap-2.5">
             <Image
               src="/images/logo.jpg"
               alt="GD-Abrasives"
@@ -100,7 +100,7 @@ export default function SiteHeader() {
             ))}
           </nav>
 
-          <a href={homeHref('#form')} className="btn-primary hidden shrink-0 px-5 py-2.5 text-sm xl:inline-flex">
+          <a href={homeHref('#form')} className="btn-primary hidden shrink-0 bg-accent-dark px-5 py-2.5 text-sm hover:bg-accent-dark xl:inline-flex">
             Оставить заявку
           </a>
 
@@ -124,18 +124,18 @@ export default function SiteHeader() {
         </div>
 
         {isOpen && (
-          <nav id="mobile-navigation" className="flex flex-col gap-1 rounded-b-xl2 bg-ink pb-4 xl:hidden">
+          <nav id="mobile-navigation" aria-label="Основная навигация" className="flex max-h-[calc(100dvh-4rem)] flex-col gap-1 overflow-y-auto overscroll-contain rounded-b-xl2 bg-ink pb-4 text-white lg:max-h-[calc(100dvh-6rem)] xl:hidden">
             {NAV_LINKS.map((link) => (
               <a
                 key={link.href}
                 href={homeHref(link.href)}
                 onClick={() => setIsOpen(false)}
-                className="rounded-lg px-2 py-2.5 font-semibold text-white/85 hover:bg-white/10"
+                className="rounded-lg px-2 py-2.5 font-semibold text-white hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-white"
               >
                 {link.label}
               </a>
             ))}
-            <a href={homeHref('#form')} onClick={() => setIsOpen(false)} className="btn-primary mt-2 text-center">
+            <a href={homeHref('#form')} onClick={() => setIsOpen(false)} className="btn-primary mt-2 bg-accent-dark text-center hover:bg-accent-dark">
               Оставить заявку
             </a>
           </nav>

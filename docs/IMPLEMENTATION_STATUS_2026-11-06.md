@@ -1,5 +1,36 @@
 # Preprod implementation status — 2026-11-06
 
+## Mobile menu contrast regression
+
+The user's Android screenshot exposed a missed visual defect: the open menu's
+five navigation links used the same computed rgb(36,35,34) as the header background.
+`text-white/85` was not emitted by Tailwind 3.3.5, so the links inherited the dark
+body color. Accessible text, click targets, widths and empty console logs had all
+passed earlier checks; none of those checks proved visible text contrast.
+
+The header and mobile navigation now explicitly inherit white; navigation links
+also specify white, and header CTAs use the darker accent. The menu has a viewport
+height cap with internal scrolling for short screens. The logo closes the menu.
+Five unsupported opacity utilities were found across the header, hero, catalogue
+and modal; they are replaced by supported or explicit arbitrary values. Muted
+text uses a legible opacity rather than restoring very faint text.
+
+`tests/color-utilities.test.cjs` compiles the actual project color-opacity classes
+with its real Tailwind/PostCSS configuration and rejects missing CSS rules.
+The old header was independently compiled and confirmed to emit no rule for its
+menu text color. Future visual acceptance must check computed foreground/background
+contrast and screenshots of the OPEN menu, not only accessibility text and width.
+
+The supplied screenshot is kept locally and excluded from Git through the remote
+attachment ignore rule. No mail, SMTP, DNS, Cloudflare or main changes are involved.
+
+Verification on the production build: open-menu checks at 320x568, 375x812,
+393x851, 812x375 and 1024x320. Navigation contrast is 15.69:1 and the header CTA
+5.25:1. There is no page-width overflow; on short screens the menu scrolls internally
+and the header bottom stays within the viewport. Twelve unit/SSR/compiler tests,
+ESLint, TypeScript and build passed. These tests are responsive browser checks,
+not a claim to have tested every physical mobile browser.
+
 ## Browser acceptance after access recovery
 
 The browser connection works again. Live checks confirmed gallery navigation,
