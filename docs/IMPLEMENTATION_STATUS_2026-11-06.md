@@ -1,5 +1,47 @@
 # Preprod implementation status — 2026-11-06
 
+## Follow-up: inquiry errors and mobile loading
+
+Confirmed local regressions in the previous package: empty/whitespace SMTP_PORT
+rejected the request rather than defaulting to 465; five-second SMTP connection
+and greeting limits could reject a healthy slow server; typographic phone dashes
+and business extensions failed validation. These are corrected. Invalid input
+does not consume the SMTP attempt budget. Optional public error codes distinguish
+configuration, authentication, timeout and delivery errors without leaking
+credentials. The form keeps its values and shows direct email/phone alternatives.
+
+The live browser reproduced counter values changing from their final values to
+an intermediate count after hydration, repeated fade/movement of visible content,
+and transparent header text while scrolling over white sections. Those effects
+are removed. Mobile fields, cards, statistics and modal text have bounded widths
+and wrapping; form padding is reduced on narrow screens. Font display is optional
+to avoid a late swap, and long anchor scrolling is immediate.
+Engineering illustrations no longer float beside a narrow strip of mobile text
+or crop wide diagrams into a fixed 192x128 box. They use their source aspect ratio
+in a bounded block. Technical table wrappers are explicitly width-bounded.
+
+The 375px baseline had 360px client width and 360px document scroll width. Wide
+technical tables were inside their own scroll containers, not confirmed page
+overflow. Do not present the entire original mobile complaint as reproduced.
+
+Verification: 11 unit/SSR tests and 8 local HTTP/SMTP integration tests passed,
+including a 5.5-second SMTP greeting, copied phone formats and invalid-input
+retry budget. Lint, TypeScript and the preprod build passed. No external email
+was sent. Browser access then stopped because the Windows safety guard could
+not identify the current browser URL; post-fix browser acceptance remains open.
+
+**Live failure cause confirmed:** after the team connection was authorized,
+Vercel returned an empty environment-variable list for mag-abrasives-1, including
+zero hidden production variables. All five required SMTP settings were absent.
+The original project contained the five settings. Following advance notice,
+they were restored only to mag-abrasives-1's Production target (the preprod
+project's active target); SMTP_PASS is sensitive, the others encrypted. No values
+were printed or written into Git. SMTP connection/TLS/authentication verification
+succeeded from the local runtime without sending a message. This proves working
+credentials, not Vercel-to-SMTP reachability or delivery to the recipient inbox.
+The newly built deployment is required to pick up the variables. Original
+production settings, main, DNS and Cloudflare are untouched.
+
 ## Delivered package
 
 - Catalogue categories 1–5 now use Alexander's five DOCX files. Grinding diameter

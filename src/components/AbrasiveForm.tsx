@@ -44,7 +44,7 @@ export default function AbrasiveForm() {
     setStatus('idle');
     setSubmitMessage('');
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 30000);
+    const timeout = setTimeout(() => controller.abort(), 65000);
 
     try {
       const response = await fetch('/api/submit-form', {
@@ -56,7 +56,18 @@ export default function AbrasiveForm() {
       const result = await response.json().catch(() => null);
       if (!response.ok) {
         setStatus('error');
-        setSubmitMessage(result?.message || 'Не удалось отправить заявку. Данные сохранены в форме. Попробуйте позже или свяжитесь с нами напрямую.');
+        if (response.status === 429) {
+          const seconds = Number(response.headers.get('retry-after'));
+          setSubmitMessage(Number.isFinite(seconds) && seconds > 0
+            ? `Лимит отправки заявок. Повторить можно примерно через ${Math.ceil(seconds / 60)} мин. Данные сохранены в форме; можно связаться с нами напрямую.`
+            : 'Лимит отправки заявок. Данные сохранены в форме; можно связаться с нами напрямую.');
+        } else if (result?.code === 'MAIL_NOT_CONFIGURED') {
+          setSubmitMessage('Отправка через сайт временно недоступна. Данные сохранены в форме. Пожалуйста, свяжитесь с нами по email или телефону ниже.');
+        } else if (result?.code === 'MAIL_TIMEOUT') {
+          setSubmitMessage('Почтовый сервер не подтвердил отправку вовремя. Данные сохранены в форме. Перед повторной отправкой уточните получение заявки по телефону или email.');
+        } else {
+          setSubmitMessage(result?.message || 'Не удалось отправить заявку. Данные сохранены в форме. Попробуйте позже или свяжитесь с нами напрямую.');
+        }
         return;
       }
       setStatus('success');
@@ -74,7 +85,7 @@ export default function AbrasiveForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="relative space-y-6" aria-busy={isSubmitting}>
+    <form onSubmit={handleSubmit} className="relative min-w-0 space-y-6" aria-busy={isSubmitting}>
       <fieldset disabled={isSubmitting} className="min-w-0 space-y-6">
         <legend className="sr-only">Заявка на подбор продукции</legend>
         <div className="absolute -left-[9999px] top-0" aria-hidden="true">
@@ -82,14 +93,14 @@ export default function AbrasiveForm() {
           <input id="website" name="website" type="text" value={formData.website} onChange={handleChange} maxLength={FIELD_LIMITS.website} tabIndex={-1} autoComplete="off" />
         </div>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-          <div>
+          <div className="min-w-0">
             <label htmlFor="category" className="mb-1 block text-sm font-medium text-gray-700">Категория продукции</label>
             <select id="category" name="category" value={selection.category} onChange={(event) => select({ category: event.target.value, product: '', source: '' })} className="form-input">
               <option value="">Помогите с подбором</option>
               {catalogCategories.map((item) => <option key={item.slug} value={item.slug}>{item.title}</option>)}
             </select>
           </div>
-          <div>
+          <div className="min-w-0">
             <label htmlFor="operation" className="mb-1 block text-sm font-medium text-gray-700">Операция (если известна)</label>
             <select id="operation" name="operation" value={formData.operation} onChange={handleChange} className="form-input">
               <option value="">Уточню в описании задачи</option>
@@ -97,7 +108,7 @@ export default function AbrasiveForm() {
             </select>
           </div>
           {contactFields.map((field) => (
-            <div key={field.name}>
+            <div key={field.name} className="min-w-0">
               <label htmlFor={field.name} className="mb-1 block text-sm font-medium text-gray-700">{field.label}{field.required ? ' *' : ''}</label>
               <input id={field.name} name={field.name} type={field.type} autoComplete={field.autoComplete} required={field.required} value={formData[field.name]} onChange={handleChange} maxLength={FIELD_LIMITS[field.name]} className="form-input" />
             </div>
@@ -123,6 +134,12 @@ export default function AbrasiveForm() {
         </div>
       </fieldset>
       <p role="status" aria-live="polite" className={`text-center text-sm ${status === 'error' ? 'text-red-600' : 'text-green-600'}`}>{submitMessage}</p>
+      <p className="text-center text-sm text-ink/70">
+        Можно связаться напрямую:{' '}
+        <a className="inline-block text-accent-dark underline" href="mailto:thebestgrindingwheels@yandex.ru">написать email</a>
+        {' · '}
+        <a className="inline-block text-accent-dark underline" href="tel:+79122855111">позвонить</a>
+      </p>
     </form>
   );
 }

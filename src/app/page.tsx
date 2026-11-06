@@ -151,8 +151,8 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 divide-x divide-y divide-black/10 sm:grid-cols-3 lg:grid-cols-5 lg:divide-y-0">
             {stats.map((s, i) => (
-              <Reveal key={s.label} className="px-4 py-6 text-center" delay={i * 70}>
-                <p className="text-xl font-black text-accent sm:text-2xl">
+              <Reveal key={s.label} className="min-w-0 px-3 py-6 text-center sm:px-4" delay={i * 70}>
+                <p className="break-words text-lg font-black leading-tight text-accent sm:text-2xl">
                   {s.counter === null ? (
                     s.value
                   ) : (
@@ -410,7 +410,7 @@ export default function Home() {
                 материалы для ваших задач.
               </p>
             </div>
-            <div className="rounded-xl2 border border-ink/10 bg-white p-6 shadow-xl sm:p-8">
+            <div className="min-w-0 rounded-xl2 border border-ink/10 bg-white p-4 shadow-xl sm:p-8">
               <AbrasiveForm />
             </div>
           </Reveal>

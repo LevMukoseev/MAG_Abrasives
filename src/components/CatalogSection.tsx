@@ -77,11 +77,11 @@ export default function CatalogSection() {
                   )}
                 </div>
 
-                <div className="flex flex-1 flex-col p-5">
-                  <h3 className="text-[15.5px] font-extrabold leading-snug text-ink">{c.title}</h3>
+                <div className="flex min-w-0 flex-1 flex-col p-5">
+                  <h3 className="break-words text-[15.5px] font-extrabold leading-snug text-ink">{c.title}</h3>
                   <p className="mt-1.5 text-[13px] leading-relaxed text-ink/55">{c.desc}</p>
-                  <div className="mt-auto flex items-center justify-between pt-4">
-                    <span className="font-mono text-[12px] font-semibold text-accent-dark">{c.range}</span>
+                  <div className="mt-auto flex min-w-0 items-center justify-between gap-2 pt-4">
+                    <span className="min-w-0 break-words font-mono text-[12px] font-semibold text-accent-dark">{c.range}</span>
                     <span
                       aria-hidden
                       className="text-sm font-bold text-ink/30 transition group-hover:translate-x-0.5 group-hover:text-accent"

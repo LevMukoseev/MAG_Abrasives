@@ -47,7 +47,7 @@ export default function FeatureCard({ id, icon, title, initialText, details, isO
                 <span aria-hidden="true" className="w-12 h-12 bg-accent/10 rounded-xl2 flex items-center justify-center shrink-0">
                   {icon}
                 </span>
-                <span className="min-w-0 flex-1 text-xl font-extrabold text-ink">{title}</span>
+                <span className="min-w-0 flex-1 break-words text-lg font-extrabold text-ink sm:text-xl">{title}</span>
                 {details.imageSrc && (
                   <Image
                     src={details.imageSrc}

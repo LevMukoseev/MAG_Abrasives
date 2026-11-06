@@ -46,8 +46,10 @@ export function validateInquiry(body: unknown): InquiryValidationResult {
   }
   if (!fields.name || !fields.email || !fields.phone) return invalid('Заполните обязательные поля');
   if (!/^[^\s@<>(),;:"\\[\]]+@[^\s@<>(),;:"\\[\]]+\.[^\s@<>(),;:"\\[\]]+$/.test(fields.email)) return invalid('Некорректный email');
-  const digits = fields.phone.replace(/\D/g, '');
-  if (!/^[+()\-.\s\d]+$/.test(fields.phone) || digits.length < 7 || digits.length > 15) {
+  fields.phone = fields.phone.replace(/[\u2010-\u2015\u2212\ufe63\uff0d]/g, '-');
+  const mainPhone = fields.phone.replace(/\s*(?:доб\.?|ext\.?|x|#)\s*\d{1,6}$/iu, '').trim();
+  const digits = mainPhone.replace(/\D/g, '');
+  if (!/^[+()\-.\s\d]+$/.test(mainPhone) || digits.length < 7 || digits.length > 15) {
     return invalid('Некорректный телефон');
   }
   if (input.consent !== true) return invalid('Необходимо согласие на обработку персональных данных');

@@ -26,6 +26,13 @@ from the real company domain. No database, queue, CRM, or new endpoint is needed
   process-local rate limits 429 with Retry-After. SMTP/configuration failures
   return 500. Success means the SMTP server accepted at least one recipient;
   it does not prove inbox delivery.
+  Error responses may additionally contain a non-sensitive `code`:
+  INVALID_INQUIRY, MAIL_NOT_CONFIGURED, MAIL_AUTH_FAILED, MAIL_TIMEOUT,
+  MAIL_REJECTED or MAIL_DELIVERY_FAILED. Existing HTTP statuses/message remain
+  compatible. Invalid input and unavailable configuration do not consume the
+  three-attempt SMTP budget. Empty SMTP_PORT retains the legacy default 465.
+  SMTP connection/greeting/socket budgets are 15/15/20 seconds; the function
+  allows 60 seconds and the browser waits up to 65 seconds.
 - A synchronous client guard prevents concurrent submissions. On errors the form
   retains its values. A timeout reports uncertain delivery instead of promising
   the message was not sent. Durable idempotency is not provided.
@@ -38,6 +45,10 @@ from the real company domain. No database, queue, CRM, or new endpoint is needed
 - Native modal dialog supplies modal focus containment/background inertness;
   closing restores focus. SSR content and statistic values stay visible without
   animations. Keyboard tabs and accordion buttons use native semantics.
+  Follow-up bugfix: decorative reveals and counters are static, the header uses
+  a constant contrast background, and anchor navigation is immediate. This avoids
+  visible content being hidden again during hydration/scroll. Optional font
+  display avoids a late font swap on slow connections.
 
 ## Consequences and limits
 

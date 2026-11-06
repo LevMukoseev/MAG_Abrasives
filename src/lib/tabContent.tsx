@@ -4,7 +4,7 @@ import SpecComparisonChart from '@/components/SpecComparisonChart';
 
 function RaTable({ rows }: { rows: [string, string][] }) {
   return (
-    <div className="overflow-x-auto rounded-lg border border-black/10">
+    <div className="min-w-0 max-w-full overflow-x-auto rounded-lg border border-black/10">
       <table className="w-full text-sm">
         <thead>
           <tr className="bg-accent/10">
@@ -35,7 +35,7 @@ function SpecTable({
   rows: [string, ...string[]][];
 }) {
   return (
-    <div className="overflow-x-auto rounded-lg border border-black/10">
+    <div className="min-w-0 max-w-full overflow-x-auto rounded-lg border border-black/10">
       <table className="w-full text-sm whitespace-nowrap">
         <thead>
           <tr className="bg-accent/10">
@@ -106,15 +106,15 @@ export const tabContent = [
         </div>
 
         <h4 className="text-xl font-extrabold text-ink mb-4">Круги для рабочих валков горячей прокатки (ГП)</h4>
-        <div className="flex flex-col md:flex-row gap-8 mb-4">
+        <div className="flex min-w-0 flex-col gap-8 mb-4">
           <p className="text-ink/70">В качестве материалов для валков используются чугун с длительным сроком службы (ICDP), сталь с высоким содержанием хрома (High-Cr) и быстрорежущая сталь (HSS). Требования к поверхности валков ГП ниже, чем к валкам холодной прокатки.</p>
           <Image
             src="/images/valki1.png"
             alt="Материалы для валков ГП"
             width={257}
             height={101}
-            sizes="192px"
-            className="w-48 h-32 object-cover rounded-lg shadow-md shrink-0"
+            sizes="(max-width: 640px) 90vw, 320px"
+            className="h-auto w-full max-w-xs rounded-lg object-contain shadow-md"
           />
         </div>
         <div className="mb-4">
@@ -123,8 +123,8 @@ export const tabContent = [
             alt="Керамическое зерно NQN и Vortex"
             width={609}
             height={106}
-            sizes="192px"
-            className="float-right ml-4 mb-4 w-48 h-32 object-cover rounded-lg shadow-md"
+            sizes="(max-width: 768px) 90vw, 609px"
+            className="mb-4 h-auto w-full max-w-[609px] rounded-lg object-contain shadow-md"
           />
           <p className="text-ink/70">В качестве материалов для валков используются чугун с длительным сроком службы (ICDP), сталь с высоким содержанием хрома (High-Cr) и быстрорежущая сталь (HSS). Требования к поверхности валков ГП ниже, чем к валкам холодной прокатки. Для более высокой скорости съёма и стойкости круга мы также добавляем зерно <span className="text-accent font-bold">NQN</span> последнего поколения от 20 до 40% или Vortex (<span className="text-ink font-extrabold">АА</span>).</p>
         </div>
@@ -145,15 +145,15 @@ export const tabContent = [
         </div>
 
         <h4 className="text-xl font-extrabold text-ink mb-4">Круги для рабочих валков холодной прокатки (ХП)</h4>
-        <div className="flex flex-col md:flex-row gap-8 mb-4">
+        <div className="flex min-w-0 flex-col gap-8 mb-4">
           <p className="text-ink/70">С поверхности валка снимается меньше металла, но при этом требуется высокое качество поверхности. Диаметр рабочего валка составляет приблизительно от 300 до 900 мм, а длина составляет 2500-5000 мм. Размер абразивного зерна колеблется от F36 до 120 по FEPA. В качестве материалов для валков в основном используются кованая и быстрорежущая сталь (HSS).</p>
           <Image
             src="/images/valki3.png"
             alt="Рабочие валки холодной прокатки"
             width={257}
             height={147}
-            sizes="192px"
-            className="w-48 h-32 object-cover rounded-lg shadow-md shrink-0"
+            sizes="(max-width: 640px) 90vw, 320px"
+            className="h-auto w-full max-w-xs rounded-lg object-contain shadow-md"
           />
         </div>
         <div className="mb-4">
@@ -162,8 +162,8 @@ export const tabContent = [
             alt="Шлифовальные круги для холодной прокатки"
             width={545}
             height={114}
-            sizes="192px"
-            className="float-right ml-4 mb-4 w-48 h-32 object-cover rounded-lg shadow-md"
+            sizes="(max-width: 768px) 90vw, 545px"
+            className="mb-4 h-auto w-full max-w-[545px] rounded-lg object-contain shadow-md"
           />
           <p className="text-ink/70">При холодной прокатке, ввиду более высокой твердости валков, используются шлифовальные круги достаточно мягкие (градации твердости C…G) с высокой концентрацией керамического корунда <span className="text-accent font-bold">NQN</span> (20-70%), либо <span className="text-ink font-extrabold">Vortex</span>, чтобы минимизировать время перешлифовки. Если Вам важен минимальный по времени оборот валков на вальцешлифовальном участке – выбирайте спецификации BEST. Размер зерна выбирайте по таблице или из опыта. С помощью режимов обработки можно получать Ra в достаточно широком диапазоне. Но в шлифовании есть правило – выбирать максимально крупное зерно, которое может обеспечивать требуемую чистоту поверхности. Так Вы быстрее снимите нужный припуск и меньше времени потратите на правку круга, а резание будет более свободное, меньше прижогов, выше стойкость круга и ниже себестоимость операции.</p>
         </div>

@@ -2,6 +2,9 @@ import { NextResponse, NextRequest } from 'next/server';
 import nodemailer from 'nodemailer';
 import { OPERATION_LABELS } from '@/lib/formOptions';
 import { validateInquiry } from '@/lib/inquiry';
+import { getSmtpConfig } from '@/lib/smtpConfig';
+
+export const maxDuration = 60;
 
 const MAX_BODY_BYTES = 16 * 1024;
 const WINDOW_MS = 10 * 60 * 1000;
@@ -67,19 +70,6 @@ async function readJsonBody(request: NextRequest): Promise<BodyResult> {
   }
 }
 
-function smtpConfig() {
-  const host = process.env.SMTP_HOST?.trim();
-  const user = process.env.SMTP_USER?.trim();
-  const pass = process.env.SMTP_PASS;
-  const to = process.env.MAIL_TO?.trim();
-  const portValue = process.env.SMTP_PORT === undefined ? '465' : process.env.SMTP_PORT.trim();
-  const port = Number(portValue);
-  if (!host || !user || !pass || !to || !/^\d+$/.test(portValue)
-    || !Number.isInteger(port) || port < 1 || port > 65535
-    || [host, user, to].some((value) => Array.from(value).some((character) => character.charCodeAt(0) < 32))) return null;
-  return { host, user, pass, to, port };
-}
-
 export async function POST(request: NextRequest) {
   if (request.headers.get('content-type')?.split(';')[0].trim().toLowerCase() !== 'application/json') {
     return NextResponse.json({ message: 'Требуется Content-Type application/json' }, { status: 415 });
@@ -92,18 +82,18 @@ export async function POST(request: NextRequest) {
     && ((body as Record<string, unknown>).website as string).trim()) {
     return NextResponse.json({ message: SUCCESS_MESSAGE }, { status: 201 });
   }
+  const result = validateInquiry(body);
+  if (!result.success) return NextResponse.json({ message: result.message, code: 'INVALID_INQUIRY' }, { status: 400 });
+  const config = getSmtpConfig();
+  if (!config) {
+    console.error('Inquiry SMTP configuration incomplete');
+    return NextResponse.json({ message: FAILURE_MESSAGE, code: 'MAIL_NOT_CONFIGURED' }, { status: 500 });
+  }
   const wait = retryAfter(getClientIp(request), Date.now());
   if (wait) {
     return NextResponse.json({ message: 'Слишком много заявок. Попробуйте позже.' }, {
       status: 429, headers: { 'Retry-After': String(wait) },
     });
-  }
-  const result = validateInquiry(body);
-  if (!result.success) return NextResponse.json({ message: result.message }, { status: 400 });
-  const config = smtpConfig();
-  if (!config) {
-    console.error('Inquiry SMTP configuration incomplete');
-    return NextResponse.json({ message: FAILURE_MESSAGE }, { status: 500 });
   }
   const data = result.data;
   const text = `Поступила новая заявка с сайта GD-Abrasives:
@@ -129,9 +119,9 @@ export async function POST(request: NextRequest) {
       port: config.port,
       secure: config.port === 465,
       requireTLS: config.port === 587,
-      connectionTimeout: 5_000,
-      greetingTimeout: 5_000,
-      socketTimeout: 10_000,
+      connectionTimeout: 15_000,
+      greetingTimeout: 15_000,
+      socketTimeout: 20_000,
       auth: { user: config.user, pass: config.pass },
     });
     const sent = await transporter.sendMail({
@@ -143,12 +133,13 @@ export async function POST(request: NextRequest) {
     });
     if (!Array.isArray(sent.accepted) || sent.accepted.length === 0) {
       console.error('Inquiry SMTP rejected all recipients');
-      return NextResponse.json({ message: FAILURE_MESSAGE }, { status: 500 });
+      return NextResponse.json({ message: FAILURE_MESSAGE, code: 'MAIL_REJECTED' }, { status: 500 });
     }
     return NextResponse.json({ message: SUCCESS_MESSAGE }, { status: 201 });
   } catch (error) {
     const code = error && typeof error === 'object' && 'code' in error ? String(error.code) : '';
     console.error('Inquiry SMTP failure', /^[A-Z_]{1,32}$/.test(code) ? code : 'UNKNOWN');
-    return NextResponse.json({ message: FAILURE_MESSAGE }, { status: 500 });
+    const publicCode = code === 'EAUTH' ? 'MAIL_AUTH_FAILED' : code === 'ETIMEDOUT' ? 'MAIL_TIMEOUT' : 'MAIL_DELIVERY_FAILED';
+    return NextResponse.json({ message: FAILURE_MESSAGE, code: publicCode }, { status: 500 });
   }
 }

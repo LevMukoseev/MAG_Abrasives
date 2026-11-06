@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 
@@ -18,55 +18,25 @@ const NAV_LINKS = [
 ];
 
 /**
- * Единственный хедер сайта: fixed поверх контента, прозрачный на тёмном hero
- * главной страницы и сплошной на остальном скролле или на страницах без hero
- * (например /privacy) — там начинаем со сплошного фона сразу, чтобы не
- * потерять читаемость на светлом фоне.
+ * Единственный хедер сайта со стабильным контрастным фоном на всех маршрутах.
  */
 export default function SiteHeader() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
-  const [isSolid, setIsSolid] = useState(true);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const frame = requestAnimationFrame(() => setIsOpen(false));
-    const heroElement = document.getElementById('hero');
-    if (!heroElement) {
-      // На страницах без hero (например /privacy) хедер всегда сплошной —
-      // isSolid уже true по умолчанию, дополнительный setState не нужен.
-      return () => cancelAnimationFrame(frame);
-    }
-
-    // rAF, а не синхронный setState — IntersectionObserver-коллбэк не
-    // гарантированно приходит мгновенно (в проде видели задержки), а
-    // requestAnimationFrame всё равно успевает до отрисовки кадра, так что
-    // "мигания" сплошного хедера над hero не будет.
-    if (typeof IntersectionObserver === 'undefined') {
-      const fallbackFrame = requestAnimationFrame(() =>
-        setIsSolid(window.scrollY > heroElement.offsetHeight - 100)
-      );
-      return () => {
-        cancelAnimationFrame(frame);
-        cancelAnimationFrame(fallbackFrame);
-      };
-    }
-    const appearanceFrame = requestAnimationFrame(() => setIsSolid(false));
-    const observer = new IntersectionObserver(
-      ([entry]) => setIsSolid(!entry.isIntersecting),
-      { rootMargin: '-100px 0px 0px 0px' }
-    );
-    observer.observe(heroElement);
-    return () => {
-      cancelAnimationFrame(frame);
-      cancelAnimationFrame(appearanceFrame);
-      observer.disconnect();
-    };
+    return () => cancelAnimationFrame(frame);
   }, [pathname]);
 
   useEffect(() => {
     if (!isOpen) return;
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setIsOpen(false);
+      if (event.key === 'Escape') {
+        setIsOpen(false);
+        menuButtonRef.current?.focus();
+      }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
@@ -75,11 +45,7 @@ export default function SiteHeader() {
   const homeHref = (hash: string) => pathname === '/' ? hash : `/${hash}`;
 
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-300 ${
-        pathname !== '/' || isSolid ? 'bg-ink shadow-lg' : 'bg-transparent'
-      }`}
-    >
+    <header className="fixed top-0 left-0 right-0 z-50 bg-ink shadow-lg">
       {/* Утилитарная строка с реквизитами — только на широких экранах */}
       <div className="hidden border-b border-white/10 lg:block">
         <div className="container mx-auto flex items-center justify-between px-4 py-1.5 text-[12.5px] text-white/60">
@@ -139,6 +105,7 @@ export default function SiteHeader() {
           </a>
 
           <button
+            ref={menuButtonRef}
             type="button"
             className="p-2 text-white xl:hidden"
             aria-label={isOpen ? 'Закрыть меню' : 'Открыть меню'}

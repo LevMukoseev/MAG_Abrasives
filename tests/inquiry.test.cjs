@@ -13,6 +13,13 @@ test('legacy clients remain supported and fields are normalized', () => {
   assert.equal(validateInquiry({ ...legacy, operation: '' }).success, true);
 });
 
+test('copied phone numbers accept typographic separators and business extensions', () => {
+  for (const phone of ['+7 (912) 285‑51‑11', '+7 (912) 285–51–11', '+7 912 285 51 11 доб. 123', '+7 912 285 51 11 ext. 123']) {
+    assert.equal(validateInquiry({ ...legacy, phone }).success, true, phone);
+  }
+  assert.equal(validateInquiry({ ...legacy, phone: '+7 912 285 51 11 доб. invalid' }).success, false);
+});
+
 test('all catalogue products resolve to server-owned captions', () => {
   for (const category of catalogCategories) {
     for (const product of category.gallery) {

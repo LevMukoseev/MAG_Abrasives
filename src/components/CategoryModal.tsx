@@ -62,7 +62,7 @@ export default function CategoryModal({ category, onClose }: CategoryModalProps)
     <dialog
       ref={dialogRef}
       aria-label={category.title}
-      className="fixed inset-0 m-auto max-h-[90dvh] w-[calc(100%_-_2rem)] max-w-4xl overflow-y-auto rounded-xl2 border-0 bg-paper p-0 text-ink shadow-2xl backdrop:bg-ink/70"
+      className="fixed inset-0 m-auto max-h-[90dvh] w-[calc(100%_-_2rem)] max-w-4xl overflow-y-auto rounded-xl2 border-0 bg-paper p-0 text-ink shadow-2xl [overflow-wrap:anywhere] backdrop:bg-ink/70"
       onCancel={(event) => { event.preventDefault(); onClose(); }}
       onClick={(event) => { if (event.target === event.currentTarget) onClose(); }}
     >
@@ -147,7 +147,7 @@ export default function CategoryModal({ category, onClose }: CategoryModalProps)
           </div>
 
           {/* Описание */}
-          <div className="flex flex-col p-5 md:p-7">
+          <div className="flex min-w-0 flex-col p-5 md:p-7">
             <span className="font-mono text-xs font-bold tracking-wider text-accent">
               {category.num} · {category.range}
             </span>

@@ -9,7 +9,7 @@ const nunito = Nunito({
   subsets: ['latin', 'cyrillic'],
   weight: ['400', '600', '700', '800'],
   variable: '--font-nunito',
-  display: 'swap',
+  display: 'optional',
 });
 
 export const metadata: Metadata = {

@@ -11,13 +11,15 @@ const { catalogCategories } = loadTypeScript('src/lib/catalogCategories.ts');
 // This SMTP sink binds exclusively to loopback. It cannot deliver external mail.
 const messages = [];
 let rejectDelivery = false;
+let greetingDelay = 0;
 const sockets = new Set();
 const smtp = net.createServer((socket) => {
   sockets.add(socket);
   socket.on('close', () => sockets.delete(socket));
   socket.on('error', () => {});
   socket.setEncoding('utf8');
-  socket.write('220 localhost test SMTP\r\n');
+  if (greetingDelay) setTimeout(() => { if (!socket.destroyed) socket.write('220 localhost test SMTP\r\n'); }, greetingDelay);
+  else socket.write('220 localhost test SMTP\r\n');
   let buffer = '';
   let receiving = false;
   let data = '';
@@ -144,6 +146,17 @@ test('SMTP rejection cannot become a success response', async () => {
   try { assert.equal((await submit(payload)).status, 500); }
   finally { rejectDelivery = false; }
   assert.equal(messages.length, count);
+});
+
+test('invalid input does not exhaust the valid inquiry sending budget', async () => {
+  for (let index = 0; index < 4; index++) assert.equal((await submit({ ...payload, phone: 'invalid' }, { ip: '203.0.113.11' })).status, 400);
+  assert.equal((await submit(payload, { ip: '203.0.113.11' })).status, 201);
+});
+
+test('a slow but healthy SMTP greeting does not fail at five seconds', async () => {
+  greetingDelay = 5500;
+  try { assert.equal((await submit(payload)).status, 201); }
+  finally { greetingDelay = 0; }
 });
 
 test('staging is noindex on main, privacy, robots, and PDF responses', async () => {
