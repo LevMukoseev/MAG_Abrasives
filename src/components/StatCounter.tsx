@@ -15,37 +15,37 @@ interface StatCounterProps {
  */
 export default function StatCounter({ value, prefix = '', suffix = '', duration = 1200 }: StatCounterProps) {
   const ref = useRef<HTMLSpanElement>(null);
-  const [display, setDisplay] = useState(0);
+  const [display, setDisplay] = useState(value);
 
   useEffect(() => {
     const el = ref.current;
-    if (!el) return;
+    if (!el || !('IntersectionObserver' in window)) return;
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion || duration <= 0) return;
+    let frame: number | undefined;
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (!entry.isIntersecting) return;
         observer.disconnect();
 
-        if (prefersReducedMotion) {
-          setDisplay(value);
-          return;
-        }
-
         const start = performance.now();
         const tick = (now: number) => {
           const progress = Math.min((now - start) / duration, 1);
           const eased = 1 - Math.pow(1 - progress, 3);
           setDisplay(Math.round(value * eased));
-          if (progress < 1) requestAnimationFrame(tick);
+          if (progress < 1) frame = requestAnimationFrame(tick);
         };
-        requestAnimationFrame(tick);
+        frame = requestAnimationFrame(tick);
       },
       { threshold: 0.5 }
     );
     observer.observe(el);
-    return () => observer.disconnect();
+    return () => {
+      observer.disconnect();
+      if (frame !== undefined) cancelAnimationFrame(frame);
+    };
   }, [value, duration]);
 
   return (

@@ -6,6 +6,7 @@ import Tabs from '@/components/Tabs';
 import Reveal from '@/components/Reveal';
 import StatCounter from '@/components/StatCounter';
 import CatalogSection from '@/components/CatalogSection';
+import { InquiryProvider } from '@/components/InquiryContext';
 import { tabContent } from '@/lib/tabContent';
 
 const features: Feature[] = [
@@ -57,7 +58,7 @@ const features: Feature[] = [
         'Новейшие мировые разработки по зерну, связкам и структуре',
         'Оперативная поставка (1-3 месяца), возможна авиа-доставка',
         'Оптимальная цена с фиксацией в рублях',
-        'Выставление КП в течение 1-2 дней',
+        'Подготовка КП после уточнения технических требований',
       ],
     },
   },
@@ -78,7 +79,7 @@ const features: Feature[] = [
       imageWidth: 700,
       imageHeight: 700,
       listItems: [
-        'Большого диаметра (до 1200 шлифовальные и до 2000 мм отрезные)',
+        'Большого диаметра (до 1400 мм шлифовальные и до 2000 мм отрезные)',
         'С премиальным составом и высоким содержанием (до 100%) керамического зерна последних поколений, высокопористые',
         'Сложные операции и трудные задачи, где обычные круги не справляются и нужна высокая производительность, эффективность, качество и стабильность обработки',
       ],
@@ -87,15 +88,16 @@ const features: Feature[] = [
 ];
 
 const stats = [
-  { value: '20 лет', label: 'опыта в абразивном инструменте', counter: 20, suffix: ' лет' },
+  { value: 'D3–1400 мм', label: 'диаметры шлифовальных кругов', counter: null, suffix: '' },
   { value: '13', label: 'категорий продукции', counter: 13, suffix: '' },
-  { value: '3', label: 'завода-партнёра в Китае', counter: 3, suffix: '' },
+  { value: 'Под задачу', label: 'подбор спецификации и производителя', counter: null, suffix: '' },
   { value: 'До 2000 мм', label: 'диаметр отрезных кругов', counter: 2000, prefix: 'До ', suffix: ' мм' },
-  { value: '1-2 дня', label: 'на коммерческое предложение', counter: null, suffix: '' },
+  { value: 'Инженерный подбор', label: 'по материалу, станку и операции', counter: null, suffix: '' },
 ];
 
 export default function Home() {
   return (
+    <InquiryProvider>
     <main className="min-h-screen">
       {/* Hero */}
       <section id="hero" className="relative overflow-hidden bg-ink text-white">
@@ -110,8 +112,7 @@ export default function Home() {
               </h1>
               <p className="mt-5 max-w-xl text-base leading-relaxed text-white/70 sm:text-[17px]">
                 От шлифовального круга до кованого прокатного валка и лабораторного твердомера.
-                Официальный представитель трёх китайских производителей в России и СНГ — с подбором
-                спецификации под вашу задачу.
+                Поставки от производителей в Россию и СНГ с подбором спецификации под вашу задачу.
               </p>
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <a href="#form" className="btn-primary">
@@ -188,8 +189,8 @@ export default function Home() {
                 </span>
                 <h3 className="text-lg font-black text-ink">Jiangsu GD-Abrasives</h3>
                 <p className="mt-2.5 text-[13.5px] leading-relaxed text-ink/60">
-                  Премиальные шлифовальные и отрезные круги с керамическим зерном NQN. 20 лет опыта,
-                  испытания на предприятиях РФ и Китая показали стойкость выше Norton и Tyrolit.
+                  Шлифовальные и отрезные круги с керамическим зерном NQN.
+                  Подбор состава и геометрии под материал, станок и требования к обработке.
                 </p>
                 <a
                   href="#applications"
@@ -387,7 +388,7 @@ export default function Home() {
                 Подберём спецификацию под вашу задачу
               </h2>
               <p className="mt-2 text-[14.5px] text-white/60">
-                Ответим с коммерческим предложением в течение 1–2 дней.
+                Подберём спецификацию и подготовим коммерческое предложение по вашей задаче.
               </p>
             </div>
             <a href="#form" className="btn-primary shrink-0 px-8 py-4 text-[15.5px]">
@@ -500,5 +501,6 @@ export default function Home() {
         </div>
       </footer>
     </main>
+    </InquiryProvider>
   );
 }

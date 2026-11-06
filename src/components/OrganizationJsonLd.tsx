@@ -1,4 +1,4 @@
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://gd-abrasives.ru';
+import { SITE_URL } from '@/lib/siteMetadata';
 
 export default function OrganizationJsonLd() {
   const data = {
@@ -9,6 +9,13 @@ export default function OrganizationJsonLd() {
     url: SITE_URL,
     logo: `${SITE_URL}/images/logo.jpg`,
     taxID: '6670531625',
+    address: {
+      '@type': 'PostalAddress',
+      postalCode: '620078',
+      addressCountry: 'RU',
+      addressLocality: 'Екатеринбург',
+      streetAddress: 'ул. Студенческая, 42а',
+    },
     contactPoint: {
       '@type': 'ContactPoint',
       telephone: '+7-912-285-51-11',
@@ -22,7 +29,7 @@ export default function OrganizationJsonLd() {
   return (
     <script
       type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(data).replace(/</g, '\\u003c') }}
     />
   );
 }

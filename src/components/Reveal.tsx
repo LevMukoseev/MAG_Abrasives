@@ -9,40 +9,39 @@ interface RevealProps {
   delay?: number;
 }
 
-/**
- * Плавное появление блока при входе в вьюпорт (fade + translate).
- * Уважает prefers-reduced-motion — в этом случае контент просто виден сразу.
- */
+/** Показывает блок при входе в область просмотра с progressive enhancement. */
 export default function Reveal({ children, className = '', delay = 0 }: RevealProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
+  const [animationReady, setAnimationReady] = useState(false);
 
   useEffect(() => {
     const el = ref.current;
-    if (!el) return;
+    if (!el || !('IntersectionObserver' in window)) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.15, rootMargin: '0px 0px -60px 0px' }
-    );
+    const observer = new IntersectionObserver(([entry]) => {
+      if (!entry.isIntersecting) return;
+      setAnimationReady(true);
+      observer.disconnect();
+    }, { threshold: 0.15, rootMargin: '0px 0px -60px 0px' });
+
     observer.observe(el);
     return () => observer.disconnect();
   }, []);
 
-  return (
-    <div
-      ref={ref}
-      className={`transition-all duration-700 ease-out motion-reduce:!transition-none motion-reduce:!opacity-100 motion-reduce:!translate-y-0 ${
-        visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
-      } ${className}`}
-      style={{ transitionDelay: visible ? `${delay}ms` : '0ms' }}
-    >
-      {children}
-    </div>
-  );
+  useEffect(() => {
+    const el = ref.current;
+    if (!animationReady || !el || !('animate' in el)) return;
+
+    const animation = el.animate(
+      [
+        { opacity: 0, transform: 'translateY(1.5rem)' },
+        { opacity: 1, transform: 'translateY(0)' },
+      ],
+      { duration: 700, delay, easing: 'ease-out', fill: 'both' }
+    );
+    return () => animation.cancel();
+  }, [animationReady, delay]);
+
+  return <div ref={ref} className={className}>{children}</div>;
 }

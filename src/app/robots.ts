@@ -1,13 +1,13 @@
 import { MetadataRoute } from 'next';
-
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://gd-abrasives.ru';
+import { SITE_URL, NON_PRODUCTION } from '@/lib/siteMetadata';
 
 export default function robots(): MetadataRoute.Robots {
   return {
+    // Keep crawling possible so search engines can read the noindex response header.
     rules: {
       userAgent: '*',
       allow: '/',
     },
-    sitemap: `${SITE_URL}/sitemap.xml`,
+    ...(NON_PRODUCTION ? {} : { sitemap: `${SITE_URL}/sitemap.xml` }),
   };
 }

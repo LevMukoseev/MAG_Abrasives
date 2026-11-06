@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 import Image from 'next/image';
 
 /**
@@ -23,22 +24,33 @@ const NAV_LINKS = [
  * потерять читаемость на светлом фоне.
  */
 export default function SiteHeader() {
+  const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
   const [isSolid, setIsSolid] = useState(true);
 
   useEffect(() => {
+    const frame = requestAnimationFrame(() => setIsOpen(false));
     const heroElement = document.getElementById('hero');
     if (!heroElement) {
       // На страницах без hero (например /privacy) хедер всегда сплошной —
       // isSolid уже true по умолчанию, дополнительный setState не нужен.
-      return;
+      return () => cancelAnimationFrame(frame);
     }
 
     // rAF, а не синхронный setState — IntersectionObserver-коллбэк не
     // гарантированно приходит мгновенно (в проде видели задержки), а
     // requestAnimationFrame всё равно успевает до отрисовки кадра, так что
     // "мигания" сплошного хедера над hero не будет.
-    const frame = requestAnimationFrame(() => setIsSolid(false));
+    if (typeof IntersectionObserver === 'undefined') {
+      const fallbackFrame = requestAnimationFrame(() =>
+        setIsSolid(window.scrollY > heroElement.offsetHeight - 100)
+      );
+      return () => {
+        cancelAnimationFrame(frame);
+        cancelAnimationFrame(fallbackFrame);
+      };
+    }
+    const appearanceFrame = requestAnimationFrame(() => setIsSolid(false));
     const observer = new IntersectionObserver(
       ([entry]) => setIsSolid(!entry.isIntersecting),
       { rootMargin: '-100px 0px 0px 0px' }
@@ -46,14 +58,26 @@ export default function SiteHeader() {
     observer.observe(heroElement);
     return () => {
       cancelAnimationFrame(frame);
+      cancelAnimationFrame(appearanceFrame);
       observer.disconnect();
     };
-  }, []);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setIsOpen(false);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen]);
+
+  const homeHref = (hash: string) => pathname === '/' ? hash : `/${hash}`;
 
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-colors duration-300 ${
-        isSolid ? 'bg-ink shadow-lg' : 'bg-transparent'
+        pathname !== '/' || isSolid ? 'bg-ink shadow-lg' : 'bg-transparent'
       }`}
     >
       {/* Утилитарная строка с реквизитами — только на широких экранах */}
@@ -80,7 +104,7 @@ export default function SiteHeader() {
 
       <div className="container mx-auto px-4">
         <div className="flex h-16 items-center justify-between gap-4">
-          <a href="#hero" className="flex shrink-0 items-center gap-2.5">
+          <a href={homeHref('#hero')} className="flex shrink-0 items-center gap-2.5">
             <Image
               src="/images/logo.jpg"
               alt="GD-Abrasives"
@@ -93,7 +117,7 @@ export default function SiteHeader() {
                 GD-Abrasives
               </span>
               <span className="mt-0.5 hidden text-[10.5px] tracking-wide text-white/50 sm:block">
-                официальный представитель в РФ и СНГ
+                абразивы · станки · валки · метрология
               </span>
             </span>
           </a>
@@ -102,7 +126,7 @@ export default function SiteHeader() {
             {NAV_LINKS.map((link) => (
               <a
                 key={link.href}
-                href={link.href}
+                href={homeHref(link.href)}
                 className="text-[13.5px] font-bold text-white/80 transition-colors hover:text-white"
               >
                 {link.label}
@@ -110,7 +134,7 @@ export default function SiteHeader() {
             ))}
           </nav>
 
-          <a href="#form" className="btn-primary hidden shrink-0 px-5 py-2.5 text-sm xl:inline-flex">
+          <a href={homeHref('#form')} className="btn-primary hidden shrink-0 px-5 py-2.5 text-sm xl:inline-flex">
             Оставить заявку
           </a>
 
@@ -119,6 +143,7 @@ export default function SiteHeader() {
             className="p-2 text-white xl:hidden"
             aria-label={isOpen ? 'Закрыть меню' : 'Открыть меню'}
             aria-expanded={isOpen}
+            aria-controls="mobile-navigation"
             onClick={() => setIsOpen((v) => !v)}
           >
             <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -132,18 +157,18 @@ export default function SiteHeader() {
         </div>
 
         {isOpen && (
-          <nav className="flex flex-col gap-1 rounded-b-xl2 bg-ink pb-4 xl:hidden">
+          <nav id="mobile-navigation" className="flex flex-col gap-1 rounded-b-xl2 bg-ink pb-4 xl:hidden">
             {NAV_LINKS.map((link) => (
               <a
                 key={link.href}
-                href={link.href}
+                href={homeHref(link.href)}
                 onClick={() => setIsOpen(false)}
                 className="rounded-lg px-2 py-2.5 font-semibold text-white/85 hover:bg-white/10"
               >
                 {link.label}
               </a>
             ))}
-            <a href="#form" onClick={() => setIsOpen(false)} className="btn-primary mt-2 text-center">
+            <a href={homeHref('#form')} onClick={() => setIsOpen(false)} className="btn-primary mt-2 text-center">
               Оставить заявку
             </a>
           </nav>

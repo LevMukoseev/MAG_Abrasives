@@ -6,17 +6,24 @@
     "dev": "node --no-experimental-webstorage node_modules/next/dist/bin/next dev",
     "build": "node --no-experimental-webstorage node_modules/next/dist/bin/next build",
     "start": "node --no-experimental-webstorage node_modules/next/dist/bin/next start",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "test": "node --test tests/*.test.cjs",
+    "test:integration": "node --test tests/integration/*.test.cjs"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
     "autoprefixer": "10.4.16",
-    "next": "^16.3.3",
-    "nodemailer": "^9.0.6",
+    "next": "^16.4.5",
+    "nodemailer": "^10.3.1",
     "postcss": "^8.5.26",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "tailwindcss": "3.3.5"
+  },
+  "overrides": {
+    "@typescript-eslint/typescript-estree": {
+      "minimatch": "11.0.5"
+    }
   },
   "devDependencies": {
     "@tailwindcss/aspect-ratio": "^0.4.2",
@@ -25,7 +32,7 @@
     "@types/react": "^18.2.45",
     "@types/react-dom": "^18.2.18",
     "eslint": "^9.39.5",
-    "eslint-config-next": "^16.3.3",
+    "eslint-config-next": "^16.4.5",
     "typescript": "5.3.3"
   }
 }

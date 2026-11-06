@@ -1,13 +1,12 @@
 import type { Metadata } from 'next';
+import { indexingMetadata } from '@/lib/siteMetadata';
 
 export const metadata: Metadata = {
   title: 'Политика конфиденциальности',
   description:
     'Политика обработки персональных данных ООО «ГД-Абрэзивс РУС» (GD-Abrasives) в соответствии с 152-ФЗ.',
-  robots: {
-    index: true,
-    follow: true,
-  },
+  alternates: { canonical: '/privacy' },
+  robots: indexingMetadata,
 };
 
 export default function PrivacyPage() {

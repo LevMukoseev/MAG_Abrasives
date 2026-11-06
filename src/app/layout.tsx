@@ -3,6 +3,7 @@ import { Nunito } from 'next/font/google';
 import './globals.css';
 import SiteHeader from '@/components/SiteHeader';
 import OrganizationJsonLd from '@/components/OrganizationJsonLd';
+import { SITE_URL, indexingMetadata } from '@/lib/siteMetadata';
 
 const nunito = Nunito({
   subsets: ['latin', 'cyrillic'],
@@ -11,16 +12,14 @@ const nunito = Nunito({
   display: 'swap',
 });
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://gd-abrasives.ru';
-
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: 'GD-Abrasives — премиальные шлифовальные круги для металлургии',
+    default: 'GD-Abrasives — абразивный инструмент, станки и прокатные валки',
     template: '%s | GD-Abrasives',
   },
   description:
-    'Официальный представитель Jiangsu Grinding Doctor Abrasives (GD-Abrasives) в России и СНГ. Шлифовальные круги для прокатных валков, отрезные круги большого диаметра, зубошлифование. Подбор спецификации, поставка 1-3 месяца.',
+    'Абразивный инструмент, отрезные и зачистные станки, прокатные валки и оборудование для металлографии. Подбор спецификации и поставки в Россию и СНГ.',
   keywords: [
     'шлифовальные круги',
     'абразивные круги',
@@ -37,9 +36,9 @@ export const metadata: Metadata = {
     locale: 'ru_RU',
     url: SITE_URL,
     siteName: 'GD-Abrasives',
-    title: 'GD-Abrasives — премиальные шлифовальные круги для металлургии',
+    title: 'GD-Abrasives — абразивный инструмент, станки и прокатные валки',
     description:
-      'Официальный представитель GD-Abrasives в России. Круги для валков, отрезные круги, подбор спецификации под задачу.',
+      'Инструмент и оборудование для обработки металла, прокатные валки и металлография. Подбор под вашу задачу.',
     images: [
       {
         url: '/images/og-cover.jpg',
@@ -51,15 +50,12 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'GD-Abrasives — премиальные шлифовальные круги',
+    title: 'GD-Abrasives — инструмент и оборудование для обработки металла',
     description:
-      'Круги для прокатных валков, отрезные круги, зубошлифование. Официальный представитель в РФ и СНГ.',
+      'Абразивный инструмент, станки, прокатные валки и металлография. Подбор спецификации, поставки в Россию и СНГ.',
     images: ['/images/og-cover.jpg'],
   },
-  robots: {
-    index: true,
-    follow: true,
-  },
+  robots: indexingMetadata,
 };
 
 export default function RootLayout({

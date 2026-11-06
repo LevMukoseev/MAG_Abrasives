@@ -1,263 +1,128 @@
 'use client';
 
-import React, { useState, FormEvent } from 'react';
+import { useRef, useState, type FormEvent, type ChangeEvent } from 'react';
 import { OPERATION_OPTIONS } from '@/lib/formOptions';
+import { catalogCategories } from '@/lib/catalogCategories';
+import { FIELD_LIMITS } from '@/lib/inquiry';
+import { useInquiry } from './InquiryContext';
 
 const initialFormData = {
-  material: '',
-  operation: 'grinding_rolls',
-  machine: '',
-  name: '',
-  email: '',
-  phone: '',
-  company: '',
-  comments: '',
-  consent: false,
-  website: '', // honeypot: скрытое поле, реальные пользователи его не видят и не заполняют
+  material: '', operation: '', machine: '', name: '', email: '', phone: '',
+  company: '', comments: '', consent: false, website: '',
 };
 
-type SubmitStatus = 'idle' | 'success' | 'error';
+const contactFields = [
+  { name: 'name', label: 'Ваше имя', type: 'text', autoComplete: 'name', required: true },
+  { name: 'email', label: 'Email', type: 'email', autoComplete: 'email', required: true },
+  { name: 'phone', label: 'Телефон', type: 'tel', autoComplete: 'tel', required: true },
+  { name: 'company', label: 'Компания', type: 'text', autoComplete: 'organization', required: false },
+  { name: 'material', label: 'Материал детали', type: 'text', autoComplete: 'off', required: false },
+  { name: 'machine', label: 'Оборудование', type: 'text', autoComplete: 'off', required: false },
+] as const;
 
 export default function AbrasiveForm() {
+  const { selection, select } = useInquiry();
   const [formData, setFormData] = useState(initialFormData);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [status, setStatus] = useState<SubmitStatus>('idle');
+  const inFlight = useRef(false);
+  const [status, setStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [submitMessage, setSubmitMessage] = useState('');
+  const category = catalogCategories.find((item) => item.slug === selection.category);
+  const product = category?.gallery.find((item) => item.src === selection.product);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value, type } = e.target;
-    const nextValue = type === 'checkbox' ? (e.target as HTMLInputElement).checked : value;
-    setFormData((prev) => ({ ...prev, [name]: nextValue }));
+  const handleChange = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const { name, value, type } = event.target;
+    const nextValue = type === 'checkbox' ? (event.target as HTMLInputElement).checked : value;
+    setFormData((previous) => ({ ...previous, [name]: nextValue }));
   };
 
-  const handleSubmit = async (e: FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (event: FormEvent) => {
+    event.preventDefault();
+    if (inFlight.current) return;
+    inFlight.current = true;
     setIsSubmitting(true);
     setStatus('idle');
     setSubmitMessage('');
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 30000);
 
     try {
       const response = await fetch('/api/submit-form', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...formData, ...selection }),
+        signal: controller.signal,
       });
-
-      if (response.ok) {
-        setStatus('success');
-        setSubmitMessage('Спасибо за вашу заявку! Мы скоро с вами свяжемся.');
-        setFormData(initialFormData);
-      } else {
-        const errorData = await response.json().catch(() => null);
+      const result = await response.json().catch(() => null);
+      if (!response.ok) {
         setStatus('error');
-        setSubmitMessage(errorData?.message || 'Произошла ошибка. Попробуйте ещё раз.');
+        setSubmitMessage(result?.message || 'Не удалось отправить заявку. Данные сохранены в форме. Попробуйте позже или свяжитесь с нами напрямую.');
+        return;
       }
+      setStatus('success');
+      setSubmitMessage('Спасибо! Заявка отправлена. Мы свяжемся с вами по указанным контактам.');
+      setFormData(initialFormData);
+      select({ category: '', product: '', source: '' });
     } catch {
       setStatus('error');
-      setSubmitMessage('Произошла ошибка сети. Пожалуйста, проверьте ваше подключение.');
+      setSubmitMessage('Ответ сервера не получен. Данные сохранены в форме. Если заявка срочная, свяжитесь с нами по телефону или email; перед повторной отправкой уточните, получена ли она.');
     } finally {
+      clearTimeout(timeout);
+      inFlight.current = false;
       setIsSubmitting(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6 relative">
-      {/* Honeypot: скрыто от людей стилями, но видно ботам, которые заполняют все поля подряд */}
-      <div className="absolute -left-[9999px] top-0" aria-hidden="true">
-        <label htmlFor="website">Website</label>
-        <input
-          type="text"
-          id="website"
-          name="website"
-          value={formData.website}
-          onChange={handleChange}
-          tabIndex={-1}
-          autoComplete="off"
-        />
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Operation */}
-        <div>
-          <label htmlFor="operation" className="block text-sm font-medium text-gray-700 mb-1">
-            Операция
-          </label>
-          <select
-            id="operation"
-            name="operation"
-            value={formData.operation}
-            onChange={handleChange}
-            className="form-input"
-            required
-          >
-            {OPERATION_OPTIONS.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
+    <form onSubmit={handleSubmit} className="relative space-y-6" aria-busy={isSubmitting}>
+      <fieldset disabled={isSubmitting} className="min-w-0 space-y-6">
+        <legend className="sr-only">Заявка на подбор продукции</legend>
+        <div className="absolute -left-[9999px] top-0" aria-hidden="true">
+          <label htmlFor="website">Website</label>
+          <input id="website" name="website" type="text" value={formData.website} onChange={handleChange} maxLength={FIELD_LIMITS.website} tabIndex={-1} autoComplete="off" />
         </div>
-
-        {/* Material */}
-        <div>
-          <label htmlFor="material" className="block text-sm font-medium text-gray-700 mb-1">
-            Материал
-          </label>
-          <input
-            type="text"
-            id="material"
-            name="material"
-            placeholder="Тип стали"
-            value={formData.material}
-            onChange={handleChange}
-            className="form-input"
-          />
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <div>
+            <label htmlFor="category" className="mb-1 block text-sm font-medium text-gray-700">Категория продукции</label>
+            <select id="category" name="category" value={selection.category} onChange={(event) => select({ category: event.target.value, product: '', source: '' })} className="form-input">
+              <option value="">Помогите с подбором</option>
+              {catalogCategories.map((item) => <option key={item.slug} value={item.slug}>{item.title}</option>)}
+            </select>
+          </div>
+          <div>
+            <label htmlFor="operation" className="mb-1 block text-sm font-medium text-gray-700">Операция (если известна)</label>
+            <select id="operation" name="operation" value={formData.operation} onChange={handleChange} className="form-input">
+              <option value="">Уточню в описании задачи</option>
+              {OPERATION_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+            </select>
+          </div>
+          {contactFields.map((field) => (
+            <div key={field.name}>
+              <label htmlFor={field.name} className="mb-1 block text-sm font-medium text-gray-700">{field.label}{field.required ? ' *' : ''}</label>
+              <input id={field.name} name={field.name} type={field.type} autoComplete={field.autoComplete} required={field.required} value={formData[field.name]} onChange={handleChange} maxLength={FIELD_LIMITS[field.name]} className="form-input" />
+            </div>
+          ))}
         </div>
-
-        {/* Machine */}
+        {product && (
+          <div className="rounded-lg border border-accent/20 bg-accent/5 p-3 text-sm text-ink/80" role="status">
+            <p>Выбран товар: <strong>{product.caption}</strong></p>
+            <button type="button" onClick={() => select({ ...selection, product: '' })} className="mt-1 text-accent-dark underline">Убрать выбранный товар</button>
+          </div>
+        )}
         <div>
-          <label htmlFor="machine" className="block text-sm font-medium text-gray-700 mb-1">
-            Оборудование
-          </label>
-          <input
-            type="text"
-            id="machine"
-            name="machine"
-            placeholder="Модели станков"
-            value={formData.machine}
-            onChange={handleChange}
-            className="form-input"
-          />
+          <label htmlFor="comments" className="mb-1 block text-sm font-medium text-gray-700">Опишите задачу</label>
+          <textarea id="comments" name="comments" rows={4} maxLength={FIELD_LIMITS.comments} placeholder="Размеры, материал, объём потребности и требования к обработке" value={formData.comments} onChange={handleChange} className="form-textarea" />
         </div>
-
-        {/* Name */}
-        <div>
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-            Ваше имя
-          </label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            className="form-input"
-            required
-            autoComplete="name"
-          />
+        <p className="text-xs text-gray-600">* Обязательные поля. Для подбора достаточно описать вашу задачу — технические параметры можно уточнить с инженером.</p>
+        <div className="flex items-start gap-2.5">
+          <input type="checkbox" id="consent" name="consent" checked={formData.consent} onChange={handleChange} required className="mt-1 h-4 w-4 shrink-0 rounded border-black/30 text-accent focus:ring-accent" />
+          <label htmlFor="consent" className="text-sm text-gray-600">Даю согласие на <a href="/privacy" target="_blank" rel="noopener noreferrer" className="text-accent-dark underline hover:text-accent">обработку персональных данных</a> в соответствии с политикой конфиденциальности</label>
         </div>
-
-        {/* Email */}
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-            Email
-          </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            className="form-input"
-            required
-            autoComplete="email"
-          />
+        <div className="text-center">
+          <button type="submit" disabled={isSubmitting || !formData.consent} className="btn-primary w-full disabled:pointer-events-none disabled:opacity-50 md:w-auto">{isSubmitting ? 'Отправка…' : 'Отправить заявку'}</button>
         </div>
-
-        {/* Phone */}
-        <div>
-          <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
-            Телефон
-          </label>
-          <input
-            type="tel"
-            id="phone"
-            name="phone"
-            value={formData.phone}
-            onChange={handleChange}
-            className="form-input"
-            required
-            autoComplete="tel"
-          />
-        </div>
-
-        {/* Company */}
-        <div>
-          <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-1">
-            Компания
-          </label>
-          <input
-            type="text"
-            id="company"
-            name="company"
-            value={formData.company}
-            onChange={handleChange}
-            className="form-input"
-            autoComplete="organization"
-          />
-        </div>
-      </div>
-
-      {/* Comments */}
-      <div>
-        <label htmlFor="comments" className="block text-sm font-medium text-gray-700 mb-1">
-          Дополнительная информация
-        </label>
-        <textarea
-          id="comments"
-          name="comments"
-          rows={4}
-          placeholder="Опишите детальней ваши требования или опишите задачу"
-          value={formData.comments}
-          onChange={handleChange}
-          className="form-textarea"
-        />
-      </div>
-
-      <div className="flex items-start gap-2.5">
-        <input
-          type="checkbox"
-          id="consent"
-          name="consent"
-          checked={formData.consent}
-          onChange={handleChange}
-          required
-          className="mt-1 h-4 w-4 shrink-0 rounded border-black/30 text-accent focus:ring-accent"
-        />
-        <label htmlFor="consent" className="text-sm text-gray-600">
-          Даю согласие на{' '}
-          <a href="/privacy" target="_blank" rel="noopener noreferrer" className="text-accent-dark underline hover:text-accent">
-            обработку персональных данных
-          </a>{' '}
-          в соответствии с политикой конфиденциальности
-        </label>
-      </div>
-
-      <div className="text-center">
-        <button
-          type="submit"
-          disabled={isSubmitting || !formData.consent}
-          className="btn-primary w-full md:w-auto disabled:opacity-50 disabled:pointer-events-none"
-        >
-          <span>{isSubmitting ? 'Отправка...' : 'Отправить заявку'}</span>
-        </button>
-      </div>
-
-      {submitMessage && (
-        <p
-          role="status"
-          aria-live="polite"
-          className={`text-center text-sm mt-4 ${
-            status === 'error' ? 'text-red-600' : 'text-green-600'
-          }`}
-        >
-          {submitMessage}
-        </p>
-      )}
+      </fieldset>
+      <p role="status" aria-live="polite" className={`text-center text-sm ${status === 'error' ? 'text-red-600' : 'text-green-600'}`}>{submitMessage}</p>
     </form>
   );
 }

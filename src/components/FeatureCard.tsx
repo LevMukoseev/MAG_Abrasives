@@ -24,7 +24,7 @@ interface FeatureCardProps {
   };
 }
 
-export default function FeatureCard({ icon, title, initialText, details, isOpen, onToggle }: FeatureCardProps) {
+export default function FeatureCard({ id, icon, title, initialText, details, isOpen, onToggle }: FeatureCardProps) {
   const isExpandable = !!details;
 
   return (
@@ -32,44 +32,55 @@ export default function FeatureCard({ icon, title, initialText, details, isOpen,
       className={`rounded-xl2 transition-all duration-500 ease-in-out ${
         isOpen ? 'bg-paper-soft shadow-lg' : 'bg-white shadow-md hover:shadow-lg'
       }`}
-      onClick={isExpandable ? onToggle : undefined}
     >
-      <div className={`p-6 sm:p-8 ${isExpandable ? 'cursor-pointer' : ''}`}>
+      <div className="p-6 sm:p-8">
         <div className="flex items-center justify-between gap-4">
-          <div className="flex items-center min-w-0">
-            <div className="w-12 h-12 bg-accent/10 rounded-xl2 flex items-center justify-center mr-5 shrink-0">
-              {icon}
-            </div>
-            <h3 className="text-xl font-extrabold text-ink">{title}</h3>
-          </div>
-          <div className="flex items-center gap-3 shrink-0">
-            {details?.imageSrc && (
-              <Image
-                src={details.imageSrc}
-                alt=""
-                aria-hidden="true"
-                width={72}
-                height={72}
-                sizes="72px"
-                className="hidden sm:block w-14 h-14 rounded-xl2 object-cover"
-              />
-            )}
-            {isExpandable && (
-              <div className="w-8 h-8 flex items-center justify-center text-ink-muted shrink-0">
-                {isOpen ? <MinusIcon className="w-6 h-6" /> : <PlusIcon className="w-6 h-6" />}
+          {isExpandable ? (
+            <h3 className="min-w-0 flex-1">
+              <button
+                type="button"
+                aria-expanded={isOpen}
+                aria-controls={`${id}-details`}
+                onClick={onToggle}
+                className="flex w-full items-center gap-4 text-left rounded focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+              >
+                <span aria-hidden="true" className="w-12 h-12 bg-accent/10 rounded-xl2 flex items-center justify-center shrink-0">
+                  {icon}
+                </span>
+                <span className="min-w-0 flex-1 text-xl font-extrabold text-ink">{title}</span>
+                {details.imageSrc && (
+                  <Image
+                    src={details.imageSrc}
+                    alt=""
+                    aria-hidden="true"
+                    width={72}
+                    height={72}
+                    sizes="72px"
+                    className="hidden sm:block w-14 h-14 rounded-xl2 object-cover shrink-0"
+                  />
+                )}
+                <span aria-hidden="true" className="w-8 h-8 flex items-center justify-center text-ink-muted shrink-0">
+                  {isOpen ? <MinusIcon className="w-6 h-6" /> : <PlusIcon className="w-6 h-6" />}
+                </span>
+              </button>
+            </h3>
+          ) : (
+            <>
+              <div className="flex items-center min-w-0">
+                <div className="w-12 h-12 bg-accent/10 rounded-xl2 flex items-center justify-center mr-5 shrink-0">
+                  {icon}
+                </div>
+                <h3 className="text-xl font-extrabold text-ink">{title}</h3>
               </div>
-            )}
-          </div>
+            </>
+          )}
         </div>
         <p className="text-ink/70 mt-4 sm:ml-16">{initialText}</p>
       </div>
 
       {isExpandable && (
-        <div
-          className={`overflow-hidden transition-[max-height,padding] duration-700 ease-in-out ${
-            isOpen ? 'max-h-[1200px] pt-4 pb-8' : 'max-h-0'
-          }`}
-        >
+        <div id={`${id}-details`} hidden={!isOpen}>
+          <div className="pt-4 pb-8">
           <div className="px-6 sm:px-8">
             <div className="border-t border-black/10 pt-8">
               {details.imageSrc ? (
@@ -128,6 +139,7 @@ export default function FeatureCard({ icon, title, initialText, details, isOpen,
                 </ul>
               )}
             </div>
+          </div>
           </div>
         </div>
       )}

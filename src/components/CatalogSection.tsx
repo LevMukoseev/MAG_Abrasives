@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import Image from 'next/image';
 import Reveal from './Reveal';
 import CategoryModal from './CategoryModal';
@@ -11,6 +11,7 @@ const CATALOG_PDF = '/Лифлет по кругам GD-Abrasives 2026.pdf';
 
 export default function CatalogSection() {
   const [openCategory, setOpenCategory] = useState<CatalogCategory | null>(null);
+  const closeCategory = useCallback(() => setOpenCategory(null), []);
 
   return (
     <section id="catalog" className="scroll-mt-24 bg-paper py-16 md:py-20">
@@ -24,10 +25,12 @@ export default function CatalogSection() {
               <h2 className="mt-2 text-3xl font-black leading-tight text-ink md:text-4xl">
                 13 категорий продукции — от круга до валка
               </h2>
+              <p id="catalog-pdf-note" className="mt-2 text-sm text-ink/60">PDF-лифлет: шлифовальные и отрезные круги GD-Abrasives.</p>
             </div>
             <a
               href={CATALOG_PDF}
               download
+              aria-describedby="catalog-pdf-note"
               className="inline-flex shrink-0 items-center gap-2 rounded-lg border-2 border-ink/10 px-5 py-3 text-sm font-extrabold text-ink transition hover:border-accent hover:text-accent"
             >
               <svg aria-hidden viewBox="0 0 20 20" className="h-4 w-4" fill="currentColor">
@@ -94,7 +97,7 @@ export default function CatalogSection() {
       </div>
 
       {openCategory && (
-        <CategoryModal category={openCategory} onClose={() => setOpenCategory(null)} />
+        <CategoryModal key={openCategory.slug} category={openCategory} onClose={closeCategory} />
       )}
     </section>
   );

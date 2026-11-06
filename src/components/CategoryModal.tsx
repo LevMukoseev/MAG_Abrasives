@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import type { CatalogCategory } from '@/lib/catalogCategories';
+import { useInquiry } from './InquiryContext';
 
 interface CategoryModalProps {
   category: CatalogCategory;
@@ -15,48 +16,58 @@ interface CategoryModalProps {
  */
 export default function CategoryModal({ category, onClose }: CategoryModalProps) {
   const [index, setIndex] = useState(0);
-  const dialogRef = useRef<HTMLDivElement>(null);
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const { select } = useInquiry();
   const total = category.gallery.length;
 
   const next = useCallback(() => setIndex((i) => (i + 1) % total), [total]);
   const prev = useCallback(() => setIndex((i) => (i - 1 + total) % total), [total]);
 
   useEffect(() => {
+    const dialog = dialogRef.current;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
       if (total > 1 && e.key === 'ArrowRight') next();
       if (total > 1 && e.key === 'ArrowLeft') prev();
     };
-    document.addEventListener('keydown', onKey);
-    return () => document.removeEventListener('keydown', onKey);
-  }, [onClose, next, prev, total]);
+    dialog?.addEventListener('keydown', onKey);
+    return () => dialog?.removeEventListener('keydown', onKey);
+  }, [next, prev, total]);
 
   // Блокируем скролл страницы под модалкой и возвращаем фокус в диалог.
   useEffect(() => {
     const previousOverflow = document.body.style.overflow;
+    const previousFocus = document.activeElement;
+    const dialog = dialogRef.current;
     document.body.style.overflow = 'hidden';
-    dialogRef.current?.focus();
+    dialog?.showModal();
     return () => {
+      dialog?.close();
       document.body.style.overflow = previousOverflow;
+      if (previousFocus instanceof HTMLElement && previousFocus.isConnected) previousFocus.focus();
     };
   }, []);
 
   const active = category.gallery[index];
 
+  const requestSpecification = () => {
+    select({ category: category.slug, product: active?.src || '', source: 'catalog' });
+    onClose();
+    requestAnimationFrame(() => {
+      document.getElementById('form')?.scrollIntoView({ behavior: 'auto', block: 'start' });
+      document.getElementById('category')?.focus({ preventScroll: true });
+    });
+  };
+
   return (
-    <div
-      className="fixed inset-0 z-[100] flex items-start justify-center overflow-y-auto bg-ink/70 p-4 sm:items-center sm:p-6"
-      onClick={onClose}
-      role="presentation"
+    <dialog
+      ref={dialogRef}
+      aria-label={category.title}
+      className="fixed inset-0 m-auto max-h-[90dvh] w-[calc(100%_-_2rem)] max-w-4xl overflow-y-auto rounded-xl2 border-0 bg-paper p-0 text-ink shadow-2xl backdrop:bg-ink/70"
+      onCancel={(event) => { event.preventDefault(); onClose(); }}
+      onClick={(event) => { if (event.target === event.currentTarget) onClose(); }}
     >
       <div
-        ref={dialogRef}
-        role="dialog"
-        aria-modal="true"
-        aria-label={category.title}
-        tabIndex={-1}
-        className="relative my-auto w-full max-w-4xl rounded-xl2 bg-paper shadow-2xl outline-none"
-        onClick={(e) => e.stopPropagation()}
+        className="relative w-full"
       >
         <button
           type="button"
@@ -103,7 +114,7 @@ export default function CategoryModal({ category, onClose }: CategoryModalProps)
                   )}
                 </div>
 
-                <p className="mt-3 min-h-[2.5rem] text-sm text-ink/60">{active.caption}</p>
+                <p aria-live="polite" className="mt-3 min-h-[2.5rem] text-sm text-ink/60">{index + 1} / {total} · {active.caption}</p>
 
                 {total > 1 && (
                   <div className="flex flex-wrap gap-2">
@@ -125,7 +136,7 @@ export default function CategoryModal({ category, onClose }: CategoryModalProps)
                 )}
               </>
             ) : (
-              <div className="flex aspect-[4/3] w-full flex-col items-center justify-center rounded-lg border border-dashed border-ink/15 bg-white px-6 text-center">
+              <div className="flex aspect-[4/3] w-full flex-col items-center justify-center rounded-lg border border-dashed border-ink/[0.15] bg-white px-6 text-center">
                 <span className="font-mono text-3xl font-bold text-accent/30">{category.num}</span>
                 <p className="mt-3 text-sm font-bold text-ink/70">Фотоматериал готовим</p>
                 <p className="mt-1 text-xs leading-relaxed text-ink/50">
@@ -156,16 +167,18 @@ export default function CategoryModal({ category, onClose }: CategoryModalProps)
               Производитель: <span className="font-semibold text-ink/60">{category.brand}</span>
             </p>
 
-            <a
-              href="#form"
-              onClick={onClose}
+            {category.deliveryNote && <p className="mt-3 text-sm text-ink/70">{category.deliveryNote}</p>}
+
+            <button
+              type="button"
+              onClick={requestSpecification}
               className="mt-5 inline-flex items-center justify-center rounded-lg bg-accent px-6 py-3 text-sm font-extrabold text-white shadow-lg shadow-accent/25 transition hover:bg-accent-dark md:mt-auto"
             >
               Запросить цену и спецификацию
-            </a>
+            </button>
           </div>
         </div>
       </div>
-    </div>
+    </dialog>
   );
 }
