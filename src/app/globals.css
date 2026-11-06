@@ -5,7 +5,8 @@
 @layer base {
   html {
     scroll-behavior: auto;
-    scroll-padding-top: 88px;
+    /* Sections own the fixed-header offset through scroll-mt-24. */
+    scroll-padding-top: 0;
   }
 
   body {

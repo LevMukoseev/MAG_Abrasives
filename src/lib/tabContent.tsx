@@ -382,10 +382,10 @@ export const tabContent = [
           </div>
 
           <h4 className="text-xl font-extrabold text-ink pt-2">Типоразмеры кругов</h4>
-          <div className="grid sm:grid-cols-2 gap-4">
-            <div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="min-w-0">
               <p className="text-sm font-bold text-ink mb-2">TYPE T41 — TAPERED</p>
-              <div className="overflow-x-auto rounded-lg border border-black/10">
+              <div className="min-w-0 max-w-full overflow-x-auto rounded-lg border border-black/10">
                 <table className="w-full text-xs whitespace-nowrap">
                   <thead>
                     <tr className="bg-accent/10">
@@ -413,9 +413,9 @@ export const tabContent = [
                 </table>
               </div>
             </div>
-            <div>
+            <div className="min-w-0">
               <p className="text-sm font-bold text-ink mb-2">TYPE T42 — со стальным центром</p>
-              <div className="overflow-x-auto rounded-lg border border-black/10">
+              <div className="min-w-0 max-w-full overflow-x-auto rounded-lg border border-black/10">
                 <table className="w-full text-xs whitespace-nowrap">
                   <thead>
                     <tr className="bg-accent/10">
@@ -440,7 +440,7 @@ export const tabContent = [
               </div>
               <p className="text-xs text-ink/40 mt-1">* Возможна поставка в конической версии.</p>
               <p className="text-sm font-bold text-ink mb-2 mt-4">Прямой профиль (без конуса)</p>
-              <div className="overflow-x-auto rounded-lg border border-black/10">
+              <div className="min-w-0 max-w-full overflow-x-auto rounded-lg border border-black/10">
                 <table className="w-full text-xs whitespace-nowrap">
                   <thead>
                     <tr className="bg-accent/10">

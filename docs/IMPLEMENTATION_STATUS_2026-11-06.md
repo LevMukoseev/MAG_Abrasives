@@ -1,5 +1,28 @@
 # Preprod implementation status — 2026-11-06
 
+## Browser acceptance after access recovery
+
+The browser connection works again. Live checks confirmed gallery navigation,
+category/product transfer into the form, focus on the category field, mobile menu
+Escape handling and modal Escape focus restoration. Console warnings/errors were
+empty during these checks.
+
+Two additional bugs were reproduced and fixed:
+
+- The large cutting-disc tab expanded a 360px document to 404px at a 375px
+  viewport. Its implicit grid column inherited the tables' minimum width. An
+  explicit single-column mobile track and bounded, shrinkable children keep
+  horizontal scrolling inside the table containers.
+- Both html scroll-padding (88px) and section scroll-margin (96px) were applied
+  to anchor navigation, placing the catalogue at 184px. Sections now own the
+  offset alone. The measured catalogue top is 96px, below the 64px mobile header.
+
+Local production-build browser checks: all eight tabs at 320, 375, 768 and 1440px
+viewports (32 combinations) have no document-level horizontal overflow. Returning
+from /privacy to /#catalog lands at the same correct offset. Build, TypeScript
+and lint passed. These checks use responsive browser viewports; they are not
+physical iOS/Android-device testing. Real mailbox delivery remains untested.
+
 ## Follow-up: inquiry errors and mobile loading
 
 Confirmed local regressions in the previous package: empty/whitespace SMTP_PORT
